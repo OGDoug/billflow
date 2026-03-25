@@ -139,6 +139,44 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Cross-Promo: Tools */}
+      <section className="border-t border-zinc-800/50 px-6 py-16 bg-zinc-900/50">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-2xl font-bold tracking-tight text-center mb-3">
+            More Free Tools for Freelancers
+          </h2>
+          <p className="text-zinc-400 text-center mb-10 text-sm">
+            We build simple, free tools so you can focus on your work.
+          </p>
+          <div className="grid sm:grid-cols-2 gap-6">
+            <a
+              href="https://free-qr-gen.vercel.app"
+              className="rounded-xl border border-zinc-800/50 bg-zinc-900/80 p-6 space-y-2 hover:border-emerald-500/50 transition-colors group"
+            >
+              <span className="text-2xl">📱</span>
+              <h3 className="font-semibold text-white group-hover:text-emerald-400 transition-colors">
+                QR Code Generator
+              </h3>
+              <p className="text-sm text-zinc-400">
+                Create QR codes instantly. Custom sizes, PNG download, no signup.
+              </p>
+            </a>
+            <a
+              href="https://woodstockaie.gumroad.com"
+              className="rounded-xl border border-zinc-800/50 bg-zinc-900/80 p-6 space-y-2 hover:border-blue-500/50 transition-colors group"
+            >
+              <span className="text-2xl">🧰</span>
+              <h3 className="font-semibold text-white group-hover:text-blue-400 transition-colors">
+                Freelancer Toolkit
+              </h3>
+              <p className="text-sm text-zinc-400">
+                AI prompts, outreach templates, pricing guides, and more — all under $10.
+              </p>
+            </a>
+          </div>
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="border-t border-zinc-800/50 px-6 py-8 text-center text-xs text-zinc-500">
         <p>BillFlow — Built for freelancers who value their time.</p>
