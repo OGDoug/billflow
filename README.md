@@ -1,36 +1,66 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# BillFlow — Free Invoice Generator for Freelancers
+
+Create professional invoices in seconds. Export beautiful PDFs. Track payments. All from your browser — no account needed.
+
+![BillFlow Screenshot](./screenshots/hero.png)
+
+## Features
+
+- **📝 Create Invoices** — Line items, tax calculations, custom notes
+- **📄 PDF Export** — Clean, print-ready PDFs with one click
+- **📊 Status Tracking** — Draft, sent, paid — always know where your money stands
+- **🔒 100% Private** — All data stays in your browser (localStorage)
+- **⚡ Fast** — No loading screens, no bloat, works offline
+- **🎨 Professional** — Modern dark UI that makes your business look polished
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+# Install dependencies
+npm install
+
+# Run development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+# Build for production
+npm run build
+
+# Start production server
+npm start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to start creating invoices.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Tech Stack
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Next.js 14** — React framework with App Router
+- **TypeScript** — Type safety
+- **Tailwind CSS** — Utility-first styling
+- **jsPDF** — Client-side PDF generation
+- **localStorage** — No backend needed
 
-## Learn More
+## How It Works
 
-To learn more about Next.js, take a look at the following resources:
+1. Click "Create Invoice"
+2. Fill in client details and line items
+3. Preview your invoice
+4. Download as PDF
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+No signup. No servers. No tracking. Just invoicing.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Deployment
 
-## Deploy on Vercel
+Deploy to Vercel in one click:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/yourusername/billflow)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Or deploy manually:
+
+```bash
+npm i -g vercel
+vercel --yes
+```
+
+## License
+
+MIT
