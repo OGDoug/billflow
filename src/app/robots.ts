@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://billflow-black.vercel.app/sitemap.xml",
+    sitemap: "https://get-billflow.vercel.app/sitemap.xml",
   };
 }
