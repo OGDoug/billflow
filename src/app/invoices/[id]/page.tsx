@@ -27,29 +27,42 @@ export default function InvoiceDetailPage() {
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
 
-    // Header
+    // Header — Sender info (upper left)
+    doc.setFontSize(14);
+    doc.setTextColor(30, 30, 30);
+    doc.text(invoice.senderName || "Your Business", 20, 20);
+    let senderY = 26;
+    if (invoice.senderAddress) {
+      doc.setFontSize(9);
+      doc.setTextColor(100, 100, 100);
+      const addrLines = doc.splitTextToSize(invoice.senderAddress, 80);
+      doc.text(addrLines, 20, senderY);
+      senderY += addrLines.length * 4.5;
+    }
+
+    // Invoice title (upper right)
     doc.setFontSize(24);
     doc.setTextColor(30, 30, 30);
-    doc.text("INVOICE", 20, 30);
+    doc.text("INVOICE", pageWidth - 20, 20, { align: "right" });
 
     doc.setFontSize(10);
     doc.setTextColor(100, 100, 100);
-    doc.text(invoice.invoiceNumber, 20, 38);
-    doc.text(`Date: ${new Date(invoice.createdAt).toLocaleDateString()}`, 20, 44);
-    doc.text(`Due: ${new Date(invoice.dueDate).toLocaleDateString()}`, 20, 50);
-    doc.text(`Status: ${invoice.status.toUpperCase()}`, 20, 56);
+    doc.text(invoice.invoiceNumber, pageWidth - 20, 28, { align: "right" });
+    doc.text(`Date: ${new Date(invoice.createdAt).toLocaleDateString()}`, pageWidth - 20, 34, { align: "right" });
+    doc.text(`Due: ${new Date(invoice.dueDate).toLocaleDateString()}`, pageWidth - 20, 40, { align: "right" });
 
     // Bill To
+    const billToY = Math.max(senderY + 10, 52);
     doc.setFontSize(10);
     doc.setTextColor(100, 100, 100);
-    doc.text("Bill To:", pageWidth - 80, 30);
+    doc.text("Bill To:", 20, billToY);
     doc.setTextColor(30, 30, 30);
     doc.setFontSize(12);
-    doc.text(invoice.clientName, pageWidth - 80, 38);
+    doc.text(invoice.clientName, 20, billToY + 8);
     if (invoice.clientEmail) {
       doc.setFontSize(10);
       doc.setTextColor(100, 100, 100);
-      doc.text(invoice.clientEmail, pageWidth - 80, 44);
+      doc.text(invoice.clientEmail, 20, billToY + 14);
     }
 
     // Table
@@ -180,13 +193,13 @@ export default function InvoiceDetailPage() {
             </span>
           </div>
 
-          {/* Meta */}
+          {/* From / To */}
           <div className="grid grid-cols-2 gap-8">
             <div className="space-y-1">
-              <p className="text-xs text-zinc-500 uppercase tracking-wider">Bill To</p>
-              <p className="font-medium">{invoice.clientName}</p>
-              {invoice.clientEmail && (
-                <p className="text-sm text-zinc-400">{invoice.clientEmail}</p>
+              <p className="text-xs text-zinc-500 uppercase tracking-wider">From</p>
+              <p className="font-medium">{invoice.senderName}</p>
+              {invoice.senderAddress && (
+                <p className="text-sm text-zinc-400 whitespace-pre-wrap">{invoice.senderAddress}</p>
               )}
             </div>
             <div className="space-y-1 text-right">
@@ -197,6 +210,16 @@ export default function InvoiceDetailPage() {
               <p className="text-sm text-zinc-400">
                 Due: {new Date(invoice.dueDate).toLocaleDateString()}
               </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-8">
+            <div className="space-y-1">
+              <p className="text-xs text-zinc-500 uppercase tracking-wider">Bill To</p>
+              <p className="font-medium">{invoice.clientName}</p>
+              {invoice.clientEmail && (
+                <p className="text-sm text-zinc-400">{invoice.clientEmail}</p>
+              )}
             </div>
           </div>
 

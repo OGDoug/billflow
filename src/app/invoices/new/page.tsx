@@ -8,6 +8,8 @@ import { saveInvoice } from "@/lib/db";
 
 export default function NewInvoicePage() {
   const router = useRouter();
+  const [senderName, setSenderName] = useState("");
+  const [senderAddress, setSenderAddress] = useState("");
   const [clientName, setClientName] = useState("");
   const [clientEmail, setClientEmail] = useState("");
   const [dueDate, setDueDate] = useState("");
@@ -43,6 +45,8 @@ export default function NewInvoicePage() {
     saveInvoice({
       id,
       invoiceNumber,
+      senderName,
+      senderAddress,
       clientName,
       clientEmail,
       items,
@@ -77,6 +81,33 @@ export default function NewInvoicePage() {
         <h1 className="text-2xl font-bold mb-8">Create Invoice</h1>
 
         <form onSubmit={handleSubmit} className="space-y-8">
+          {/* From (Sender) Info */}
+          <div className="space-y-4">
+            <label className="text-sm font-medium text-zinc-400">From</label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-zinc-400">Your Name / Business *</label>
+                <input
+                  required
+                  value={senderName}
+                  onChange={(e) => setSenderName(e.target.value)}
+                  placeholder="Your Name or Company"
+                  className={inputClass}
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-zinc-400">Address / Contact Info</label>
+                <textarea
+                  value={senderAddress}
+                  onChange={(e) => setSenderAddress(e.target.value)}
+                  placeholder={"123 Main St\nCity, State 12345\nphone@email.com"}
+                  rows={3}
+                  className={inputClass}
+                />
+              </div>
+            </div>
+          </div>
+
           {/* Client Info */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">

@@ -8,6 +8,8 @@ export interface InvoiceItem {
 export interface Invoice {
   id: string;
   invoiceNumber: string;
+  senderName: string;
+  senderAddress: string;
   clientName: string;
   clientEmail: string;
   items: InvoiceItem[];
