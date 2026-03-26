@@ -4,6 +4,7 @@ export interface UserSettings {
   tier: UserTier;
   logo?: string; // base64 data URL
   savedClients: SavedClient[];
+  mailingList: MailingListEntry[];
 }
 
 export interface SavedClient {
@@ -12,6 +13,13 @@ export interface SavedClient {
   email: string;
   phone: string;
   address: string;
+}
+
+export interface MailingListEntry {
+  email: string;
+  name: string;
+  phone: string;
+  addedAt: string;
 }
 
 export interface InvoiceItem {

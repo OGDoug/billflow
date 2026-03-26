@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { InvoiceItem, InvoiceTemplate } from "@/lib/types";
-import { saveInvoice, isPremium, getSavedClients, saveClient, getSettings, saveSettings } from "@/lib/db";
+import { saveInvoice, isPremium, getSavedClients, saveClient, getSettings, saveSettings, addToMailingList } from "@/lib/db";
 
 export default function NewInvoicePage() {
   const router = useRouter();
@@ -99,11 +99,14 @@ export default function NewInvoicePage() {
     };
     // Always save (needed for the detail/PDF page), but free users get cleared after download
     saveInvoice(invoice);
-    // Premium: auto-save client for reuse
+    // Premium: auto-save client for reuse + add to mailing list
     if (premium && clientName) {
       const existingClient = savedClients.find((c) => c.name === clientName);
       if (!existingClient) {
         saveClient({ id: crypto.randomUUID(), name: clientName, email: clientEmail, phone: clientPhone, address: clientAddress });
+      }
+      if (clientEmail) {
+        addToMailingList({ email: clientEmail, name: clientName, phone: clientPhone, addedAt: new Date().toISOString() });
       }
     }
     router.push(`/invoices/${id}`);

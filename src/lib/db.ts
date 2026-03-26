@@ -1,4 +1,4 @@
-import { Invoice, UserSettings, SavedClient } from "./types";
+import { Invoice, UserSettings, SavedClient, MailingListEntry } from "./types";
 
 const STORAGE_KEY = "billflow_invoices";
 const SETTINGS_KEY = "billflow_settings";
@@ -6,6 +6,7 @@ const SETTINGS_KEY = "billflow_settings";
 const DEFAULT_SETTINGS: UserSettings = {
   tier: "free",
   savedClients: [],
+  mailingList: [],
 };
 
 export function getSettings(): UserSettings {
@@ -44,6 +45,30 @@ export function deleteClient(id: string): void {
   const settings = getSettings();
   settings.savedClients = settings.savedClients.filter((c) => c.id !== id);
   saveSettings(settings);
+}
+
+export function getMailingList(): MailingListEntry[] {
+  return getSettings().mailingList || [];
+}
+
+export function addToMailingList(entry: MailingListEntry): void {
+  const settings = getSettings();
+  if (!settings.mailingList) settings.mailingList = [];
+  const exists = settings.mailingList.find((e) => e.email.toLowerCase() === entry.email.toLowerCase());
+  if (!exists) {
+    settings.mailingList.push(entry);
+    saveSettings(settings);
+  }
+}
+
+export function removeFromMailingList(email: string): void {
+  const settings = getSettings();
+  settings.mailingList = (settings.mailingList || []).filter((e) => e.email.toLowerCase() !== email.toLowerCase());
+  saveSettings(settings);
+}
+
+export function addManualToMailingList(email: string, name: string): void {
+  addToMailingList({ email, name, phone: "", addedAt: new Date().toISOString() });
 }
 
 export function getInvoices(): Invoice[] {
