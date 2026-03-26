@@ -162,37 +162,55 @@ export default function NewInvoicePage() {
             </div>
           )}
 
-          {/* Template Picker (Premium) */}
-          {premium && (
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-zinc-400">Invoice Style</label>
-              <div className="grid grid-cols-5 gap-2">
-                {([
-                  { id: "classic", label: "Classic", colors: "bg-white border-zinc-300", accent: "bg-zinc-800" },
-                  { id: "modern", label: "Modern", colors: "bg-zinc-900 border-blue-500", accent: "bg-blue-500" },
-                  { id: "minimal", label: "Minimal", colors: "bg-white border-zinc-200", accent: "bg-zinc-400" },
-                  { id: "bold", label: "Bold", colors: "bg-zinc-950 border-amber-500", accent: "bg-amber-500" },
-                  { id: "elegant", label: "Elegant", colors: "bg-stone-50 border-stone-400", accent: "bg-stone-700" },
-                ] as const).map((t) => (
+          {/* Template Picker */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-zinc-400">Invoice Style</label>
+            <div className="grid grid-cols-5 gap-2">
+              {([
+                { id: "classic", label: "Classic", colors: "bg-white border-zinc-300", accent: "bg-zinc-800" },
+                { id: "modern", label: "Modern", colors: "bg-zinc-900 border-blue-500", accent: "bg-blue-500" },
+                { id: "minimal", label: "Minimal", colors: "bg-white border-zinc-200", accent: "bg-zinc-400" },
+                { id: "bold", label: "Bold", colors: "bg-zinc-950 border-amber-500", accent: "bg-amber-500" },
+                { id: "elegant", label: "Elegant", colors: "bg-stone-50 border-stone-400", accent: "bg-stone-700" },
+              ] as const).map((s) => {
+                const isFree = s.id === "classic";
+                const isSelected = template === s.id;
+                const locked = !premium && !isFree;
+                return (
                   <button
-                    key={t.id}
+                    key={s.id}
                     type="button"
-                    onClick={() => setTemplate(t.id)}
-                    className={`rounded-lg border-2 p-3 text-center transition-all ${
-                      template === t.id
+                    onClick={() => {
+                      if (!locked) setTemplate(s.id);
+                    }}
+                    className={`rounded-lg border-2 p-3 text-center transition-all relative ${
+                      isSelected
                         ? "border-blue-500 ring-1 ring-blue-500"
+                        : locked
+                        ? "border-zinc-800 opacity-60 cursor-not-allowed"
                         : "border-zinc-700 hover:border-zinc-500"
                     }`}
                   >
-                    <div className={`h-8 rounded ${t.colors} border mb-2 flex items-end p-1`}>
-                      <div className={`h-1.5 w-full rounded ${t.accent}`} />
+                    {locked && (
+                      <div className="absolute top-1 right-1 text-xs">🔒</div>
+                    )}
+                    <div className={`h-8 rounded ${s.colors} border mb-2 flex items-end p-1`}>
+                      <div className={`h-1.5 w-full rounded ${s.accent}`} />
                     </div>
-                    <span className="text-xs text-zinc-400">{t.label}</span>
+                    <span className="text-xs text-zinc-400">{s.label}</span>
+                    {isFree && !premium && (
+                      <span className="block text-[10px] text-zinc-600">Free</span>
+                    )}
                   </button>
-                ))}
-              </div>
+                );
+              })}
             </div>
-          )}
+            {!premium && (
+              <p className="text-xs text-zinc-500 mt-1">
+                🔒 Upgrade to <span className="text-blue-400">Pro</span> to unlock all invoice styles. Your free invoice uses the Classic style.
+              </p>
+            )}
+          </div>
 
           {/* From (Sender) Info */}
           <div className="space-y-4">
