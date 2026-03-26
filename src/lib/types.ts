@@ -1,5 +1,6 @@
 export interface InvoiceItem {
   id: string;
+  kind: "item" | "service";
   description: string;
   quantity: number;
   rate: number;

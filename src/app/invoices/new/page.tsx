@@ -17,12 +17,12 @@ export default function NewInvoicePage() {
   const [taxRate, setTaxRate] = useState(0);
   const [notes, setNotes] = useState("");
   const [items, setItems] = useState<InvoiceItem[]>([
-    { id: crypto.randomUUID(), description: "", quantity: 1, rate: 0 },
+    { id: crypto.randomUUID(), kind: "item", description: "", quantity: 1, rate: 0 },
   ]);
   const [submitting, setSubmitting] = useState(false);
 
   const addItem = () => {
-    setItems([...items, { id: crypto.randomUUID(), description: "", quantity: 1, rate: 0 }]);
+    setItems([...items, { id: crypto.randomUUID(), kind: "item", description: "", quantity: 1, rate: 0 }]);
   };
 
   const removeItem = (id: string) => {
@@ -34,7 +34,7 @@ export default function NewInvoicePage() {
     setItems(items.map((i) => (i.id === id ? { ...i, [field]: value } : i)));
   };
 
-  const subtotal = items.reduce((s, i) => s + i.quantity * i.rate, 0);
+  const subtotal = items.reduce((s, i) => s + (i.kind === "service" ? 1 : i.quantity) * i.rate, 0);
   const tax = subtotal * (taxRate / 100);
   const total = subtotal + tax;
 
@@ -184,22 +184,32 @@ export default function NewInvoicePage() {
             <div className="space-y-3">
               {items.map((item, idx) => (
                 <div key={item.id} className="grid grid-cols-12 gap-2 items-start">
+                  <select
+                    value={item.kind}
+                    onChange={(e) => updateItem(item.id, "kind", e.target.value)}
+                    className={`${inputClass} col-span-2`}
+                  >
+                    <option value="item">Item</option>
+                    <option value="service">Service</option>
+                  </select>
                   <input
                     required
                     placeholder="Description"
                     value={item.description}
                     onChange={(e) => updateItem(item.id, "description", e.target.value)}
-                    className={`${inputClass} col-span-6`}
+                    className={`${inputClass} ${item.kind === "service" ? "col-span-6" : "col-span-4"}`}
                   />
-                  <input
-                    required
-                    type="number"
-                    min="1"
-                    placeholder="Qty"
-                    value={item.quantity}
-                    onChange={(e) => updateItem(item.id, "quantity", parseInt(e.target.value) || 0)}
-                    className={`${inputClass} col-span-2`}
-                  />
+                  {item.kind === "item" && (
+                    <input
+                      required
+                      type="number"
+                      min="1"
+                      placeholder="Qty"
+                      value={item.quantity}
+                      onChange={(e) => updateItem(item.id, "quantity", parseInt(e.target.value) || 0)}
+                      className={`${inputClass} col-span-2`}
+                    />
+                  )}
                   <input
                     required
                     type="number"

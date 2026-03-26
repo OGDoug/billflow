@@ -66,12 +66,15 @@ export default function InvoiceDetailPage() {
     }
 
     // Table
-    const tableData = invoice.items.map((item) => [
-      item.description,
-      item.quantity.toString(),
-      `$${item.rate.toFixed(2)}`,
-      `$${(item.quantity * item.rate).toFixed(2)}`,
-    ]);
+    const tableData = invoice.items.map((item) => {
+      const qty = item.kind === "service" ? 1 : item.quantity;
+      return [
+        item.description,
+        item.kind === "service" ? "—" : item.quantity.toString(),
+        `$${item.rate.toFixed(2)}`,
+        `$${(qty * item.rate).toFixed(2)}`,
+      ];
+    });
 
     (doc as any).autoTable({
       startY: 70,
@@ -243,16 +246,21 @@ export default function InvoiceDetailPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-zinc-800">
-                {invoice.items.map((item) => (
-                  <tr key={item.id}>
-                    <td className="px-4 py-3">{item.description}</td>
-                    <td className="px-4 py-3 text-center tabular-nums">{item.quantity}</td>
-                    <td className="px-4 py-3 text-right tabular-nums">${item.rate.toFixed(2)}</td>
-                    <td className="px-4 py-3 text-right tabular-nums">
-                      ${(item.quantity * item.rate).toFixed(2)}
-                    </td>
-                  </tr>
-                ))}
+                {invoice.items.map((item) => {
+                  const qty = item.kind === "service" ? 1 : item.quantity;
+                  return (
+                    <tr key={item.id}>
+                      <td className="px-4 py-3">{item.description}</td>
+                      <td className="px-4 py-3 text-center tabular-nums">
+                        {item.kind === "service" ? "—" : item.quantity}
+                      </td>
+                      <td className="px-4 py-3 text-right tabular-nums">${item.rate.toFixed(2)}</td>
+                      <td className="px-4 py-3 text-right tabular-nums">
+                        ${(qty * item.rate).toFixed(2)}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
