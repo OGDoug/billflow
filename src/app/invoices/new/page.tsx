@@ -206,7 +206,7 @@ export default function NewInvoicePage() {
                     min="0"
                     step="0.01"
                     placeholder="Rate"
-                    value={item.rate}
+                    value={item.rate || ""}
                     onChange={(e) => updateItem(item.id, "rate", parseFloat(e.target.value) || 0)}
                     className={`${inputClass} col-span-3`}
                   />
