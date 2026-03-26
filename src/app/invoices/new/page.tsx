@@ -8,6 +8,7 @@ import { saveInvoice } from "@/lib/db";
 
 export default function NewInvoicePage() {
   const router = useRouter();
+  const [invoiceNumber, setInvoiceNumber] = useState("");
   const [senderName, setSenderName] = useState("");
   const [senderAddress, setSenderAddress] = useState("");
   const [clientName, setClientName] = useState("");
@@ -41,10 +42,10 @@ export default function NewInvoicePage() {
     e.preventDefault();
     setSubmitting(true);
     const id = crypto.randomUUID();
-    const invoiceNumber = `INV-${Date.now().toString(36).toUpperCase()}`;
+    const finalInvoiceNumber = invoiceNumber.trim() || `INV-${Date.now().toString(36).toUpperCase()}`;
     saveInvoice({
       id,
-      invoiceNumber,
+      invoiceNumber: finalInvoiceNumber,
       senderName,
       senderAddress,
       clientName,
@@ -81,6 +82,17 @@ export default function NewInvoicePage() {
         <h1 className="text-2xl font-bold mb-8">Create Invoice</h1>
 
         <form onSubmit={handleSubmit} className="space-y-8">
+          {/* Invoice Number */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-zinc-400">Invoice Number</label>
+            <input
+              value={invoiceNumber}
+              onChange={(e) => setInvoiceNumber(e.target.value)}
+              placeholder="Auto-generated if left blank"
+              className={inputClass}
+            />
+          </div>
+
           {/* From (Sender) Info */}
           <div className="space-y-4">
             <label className="text-sm font-medium text-zinc-400">From</label>
