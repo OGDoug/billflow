@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { InvoiceItem } from "@/lib/types";
+import { InvoiceItem, InvoiceTemplate } from "@/lib/types";
 import { saveInvoice, isPremium, getSavedClients, saveClient, getSettings, saveSettings } from "@/lib/db";
 
 export default function NewInvoicePage() {
@@ -23,6 +23,7 @@ export default function NewInvoicePage() {
   const [premium, setPremium] = useState(false);
   const [savedClients, setSavedClients] = useState<{ id: string; name: string; email: string }[]>([]);
   const [logo, setLogo] = useState<string | undefined>(undefined);
+  const [template, setTemplate] = useState<InvoiceTemplate>("classic");
 
   useEffect(() => {
     setPremium(isPremium());
@@ -79,6 +80,7 @@ export default function NewInvoicePage() {
       senderName,
       senderAddress,
       logo: premium ? logo : undefined,
+      template: premium ? template : "classic",
       clientName,
       clientEmail,
       items,
@@ -157,6 +159,38 @@ export default function NewInvoicePage() {
                 />
               )}
               <p className="text-xs text-zinc-600">PNG, JPG, or SVG · Max 500KB · Saved for all invoices</p>
+            </div>
+          )}
+
+          {/* Template Picker (Premium) */}
+          {premium && (
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-zinc-400">Invoice Style</label>
+              <div className="grid grid-cols-5 gap-2">
+                {([
+                  { id: "classic", label: "Classic", colors: "bg-white border-zinc-300", accent: "bg-zinc-800" },
+                  { id: "modern", label: "Modern", colors: "bg-zinc-900 border-blue-500", accent: "bg-blue-500" },
+                  { id: "minimal", label: "Minimal", colors: "bg-white border-zinc-200", accent: "bg-zinc-400" },
+                  { id: "bold", label: "Bold", colors: "bg-zinc-950 border-amber-500", accent: "bg-amber-500" },
+                  { id: "elegant", label: "Elegant", colors: "bg-stone-50 border-stone-400", accent: "bg-stone-700" },
+                ] as const).map((t) => (
+                  <button
+                    key={t.id}
+                    type="button"
+                    onClick={() => setTemplate(t.id)}
+                    className={`rounded-lg border-2 p-3 text-center transition-all ${
+                      template === t.id
+                        ? "border-blue-500 ring-1 ring-blue-500"
+                        : "border-zinc-700 hover:border-zinc-500"
+                    }`}
+                  >
+                    <div className={`h-8 rounded ${t.colors} border mb-2 flex items-end p-1`}>
+                      <div className={`h-1.5 w-full rounded ${t.accent}`} />
+                    </div>
+                    <span className="text-xs text-zinc-400">{t.label}</span>
+                  </button>
+                ))}
+              </div>
             </div>
           )}
 

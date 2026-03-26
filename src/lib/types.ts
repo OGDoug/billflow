@@ -20,6 +20,8 @@ export interface InvoiceItem {
   rate: number;
 }
 
+export type InvoiceTemplate = "classic" | "modern" | "minimal" | "bold" | "elegant";
+
 export interface Invoice {
   id: string;
   invoiceNumber: string;
@@ -37,4 +39,5 @@ export interface Invoice {
   subtotal: number;
   tax: number;
   total: number;
+  template?: InvoiceTemplate;
 }

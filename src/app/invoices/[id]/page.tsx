@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { Invoice } from "@/lib/types";
 import { getInvoice, deleteInvoice, isPremium } from "@/lib/db";
+import { getTemplate } from "@/lib/templates";
 
 export default function InvoiceDetailPage() {
   const params = useParams();
@@ -28,6 +29,8 @@ export default function InvoiceDetailPage() {
 
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
+    const tpl = getTemplate(invoice.template);
+    const pc = tpl.pdf;
 
     // Logo (upper left, above sender info)
     let logoOffset = 0;
@@ -43,12 +46,12 @@ export default function InvoiceDetailPage() {
     // Header — Sender info
     const senderX = 20 + logoOffset;
     doc.setFontSize(14);
-    doc.setTextColor(30, 30, 30);
+    doc.setTextColor(...pc.headingColor);
     doc.text(invoice.senderName || "Your Business", senderX, 20);
     let senderY = 26;
     if (invoice.senderAddress) {
       doc.setFontSize(9);
-      doc.setTextColor(100, 100, 100);
+      doc.setTextColor(...pc.subtextColor);
       const addrLines = doc.splitTextToSize(invoice.senderAddress, 80);
       doc.text(addrLines, senderX, senderY);
       senderY += addrLines.length * 4.5;
@@ -56,11 +59,11 @@ export default function InvoiceDetailPage() {
 
     // Invoice title (upper right)
     doc.setFontSize(24);
-    doc.setTextColor(30, 30, 30);
+    doc.setTextColor(...pc.headingColor);
     doc.text("INVOICE", pageWidth - 20, 20, { align: "right" });
 
     doc.setFontSize(10);
-    doc.setTextColor(100, 100, 100);
+    doc.setTextColor(...pc.subtextColor);
     doc.text(invoice.invoiceNumber, pageWidth - 20, 28, { align: "right" });
     doc.text(`Date: ${new Date(invoice.createdAt).toLocaleDateString()}`, pageWidth - 20, 34, { align: "right" });
     doc.text(`Due: ${new Date(invoice.dueDate).toLocaleDateString()}`, pageWidth - 20, 40, { align: "right" });
@@ -68,14 +71,14 @@ export default function InvoiceDetailPage() {
     // Bill To
     const billToY = Math.max(senderY + 10, 52);
     doc.setFontSize(10);
-    doc.setTextColor(100, 100, 100);
+    doc.setTextColor(...pc.subtextColor);
     doc.text("Bill To:", 20, billToY);
-    doc.setTextColor(30, 30, 30);
+    doc.setTextColor(...pc.textColor);
     doc.setFontSize(12);
     doc.text(invoice.clientName, 20, billToY + 8);
     if (invoice.clientEmail) {
       doc.setFontSize(10);
-      doc.setTextColor(100, 100, 100);
+      doc.setTextColor(...pc.subtextColor);
       doc.text(invoice.clientEmail, 20, billToY + 14);
     }
 
@@ -96,14 +99,14 @@ export default function InvoiceDetailPage() {
       body: tableData,
       theme: "plain",
       headStyles: {
-        fillColor: [245, 245, 245],
-        textColor: [60, 60, 60],
+        fillColor: pc.tableHeadBg,
+        textColor: pc.tableHeadText,
         fontStyle: "bold",
         fontSize: 9,
       },
       bodyStyles: {
         fontSize: 9,
-        textColor: [40, 40, 40],
+        textColor: pc.textColor,
       },
       columnStyles: {
         0: { cellWidth: "auto" },
@@ -118,7 +121,7 @@ export default function InvoiceDetailPage() {
     // Totals
     const rightX = pageWidth - 20;
     doc.setFontSize(10);
-    doc.setTextColor(100, 100, 100);
+    doc.setTextColor(...pc.subtextColor);
     doc.text("Subtotal:", rightX - 50, finalY);
     doc.text(`$${invoice.subtotal.toFixed(2)}`, rightX, finalY, { align: "right" });
 
@@ -128,7 +131,7 @@ export default function InvoiceDetailPage() {
     }
 
     doc.setFontSize(13);
-    doc.setTextColor(30, 30, 30);
+    doc.setTextColor(...pc.headingColor);
     const totalY = invoice.taxRate > 0 ? finalY + 18 : finalY + 10;
     doc.text("Total:", rightX - 50, totalY);
     doc.text(`$${invoice.total.toFixed(2)}`, rightX, totalY, { align: "right" });
@@ -170,10 +173,11 @@ export default function InvoiceDetailPage() {
     );
   }
 
+  const t = getTemplate(invoice.template);
   const statusColors: Record<string, string> = {
-    draft: "bg-zinc-700 text-zinc-300",
-    sent: "bg-yellow-900/50 text-yellow-400",
-    paid: "bg-green-900/50 text-green-400",
+    draft: t.statusDraft,
+    sent: t.statusSent,
+    paid: t.statusPaid,
   };
 
   return (
@@ -201,7 +205,7 @@ export default function InvoiceDetailPage() {
 
       <main className="max-w-3xl mx-auto px-6 py-10">
         {/* Invoice Preview */}
-        <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-8 space-y-8">
+        <div className={t.card}>
           {/* Header */}
           <div className="flex justify-between items-start">
             <div className="flex items-center gap-4">
@@ -209,8 +213,8 @@ export default function InvoiceDetailPage() {
                 <img src={invoice.logo} alt="Logo" className="h-14 w-auto" />
               )}
               <div>
-                <h1 className="text-3xl font-bold tracking-tight">INVOICE</h1>
-                <p className="text-sm text-zinc-500 font-mono mt-1">
+                <h1 className={t.heading}>INVOICE</h1>
+                <p className={t.invoiceNumber}>
                   {invoice.invoiceNumber}
                 </p>
               </div>
@@ -223,18 +227,18 @@ export default function InvoiceDetailPage() {
           {/* From / To */}
           <div className="grid grid-cols-2 gap-8">
             <div className="space-y-1">
-              <p className="text-xs text-zinc-500 uppercase tracking-wider">From</p>
-              <p className="font-medium">{invoice.senderName}</p>
+              <p className={t.label}>From</p>
+              <p className={t.text}>{invoice.senderName}</p>
               {invoice.senderAddress && (
-                <p className="text-sm text-zinc-400 whitespace-pre-wrap">{invoice.senderAddress}</p>
+                <p className={`${t.subtext} whitespace-pre-wrap`}>{invoice.senderAddress}</p>
               )}
             </div>
             <div className="space-y-1 text-right">
-              <p className="text-xs text-zinc-500 uppercase tracking-wider">Details</p>
-              <p className="text-sm text-zinc-400">
+              <p className={t.label}>Details</p>
+              <p className={t.subtext}>
                 Created: {new Date(invoice.createdAt).toLocaleDateString()}
               </p>
-              <p className="text-sm text-zinc-400">
+              <p className={t.subtext}>
                 Due: {new Date(invoice.dueDate).toLocaleDateString()}
               </p>
             </div>
@@ -242,34 +246,26 @@ export default function InvoiceDetailPage() {
 
           <div className="grid grid-cols-2 gap-8">
             <div className="space-y-1">
-              <p className="text-xs text-zinc-500 uppercase tracking-wider">Bill To</p>
-              <p className="font-medium">{invoice.clientName}</p>
+              <p className={t.label}>Bill To</p>
+              <p className={t.text}>{invoice.clientName}</p>
               {invoice.clientEmail && (
-                <p className="text-sm text-zinc-400">{invoice.clientEmail}</p>
+                <p className={t.subtext}>{invoice.clientEmail}</p>
               )}
             </div>
           </div>
 
           {/* Items Table */}
-          <div className="overflow-hidden rounded-lg border border-zinc-800">
+          <div className={`overflow-hidden rounded-lg ${t.tableBorder}`}>
             <table className="w-full text-sm">
               <thead>
-                <tr className="bg-zinc-800/50">
-                  <th className="px-4 py-3 text-left text-xs font-medium text-zinc-400 uppercase tracking-wider">
-                    Description
-                  </th>
-                  <th className="px-4 py-3 text-center text-xs font-medium text-zinc-400 uppercase tracking-wider">
-                    Qty
-                  </th>
-                  <th className="px-4 py-3 text-right text-xs font-medium text-zinc-400 uppercase tracking-wider">
-                    Rate
-                  </th>
-                  <th className="px-4 py-3 text-right text-xs font-medium text-zinc-400 uppercase tracking-wider">
-                    Amount
-                  </th>
+                <tr className={t.tableHead}>
+                  <th className={`px-4 py-3 text-left ${t.tableHeadText}`}>Description</th>
+                  <th className={`px-4 py-3 text-center ${t.tableHeadText}`}>Qty</th>
+                  <th className={`px-4 py-3 text-right ${t.tableHeadText}`}>Rate</th>
+                  <th className={`px-4 py-3 text-right ${t.tableHeadText}`}>Amount</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-zinc-800">
+              <tbody className={t.tableRow}>
                 {invoice.items.map((item) => {
                   const qty = item.kind === "service" ? 1 : item.quantity;
                   return (
@@ -292,17 +288,17 @@ export default function InvoiceDetailPage() {
           {/* Totals */}
           <div className="flex justify-end">
             <div className="w-64 space-y-2">
-              <div className="flex justify-between text-sm text-zinc-400">
+              <div className={`flex justify-between text-sm ${t.subtext}`}>
                 <span>Subtotal</span>
                 <span className="tabular-nums">${invoice.subtotal.toFixed(2)}</span>
               </div>
               {invoice.taxRate > 0 && (
-                <div className="flex justify-between text-sm text-zinc-400">
+                <div className={`flex justify-between text-sm ${t.subtext}`}>
                   <span>Tax ({invoice.taxRate}%)</span>
                   <span className="tabular-nums">${invoice.tax.toFixed(2)}</span>
                 </div>
               )}
-              <div className="flex justify-between text-xl font-bold pt-3 border-t border-zinc-700">
+              <div className={`flex justify-between pt-3 ${t.totalBorder} ${t.totalText}`}>
                 <span>Total</span>
                 <span className="tabular-nums">${invoice.total.toFixed(2)}</span>
               </div>
@@ -311,9 +307,9 @@ export default function InvoiceDetailPage() {
 
           {/* Notes */}
           {invoice.notes && (
-            <div className="pt-4 border-t border-zinc-800">
-              <p className="text-xs text-zinc-500 uppercase tracking-wider mb-2">Notes</p>
-              <p className="text-sm text-zinc-400 whitespace-pre-wrap">{invoice.notes}</p>
+            <div className={`pt-4 border-t border-zinc-800`}>
+              <p className={`${t.label} mb-2`}>Notes</p>
+              <p className={`${t.subtext} whitespace-pre-wrap`}>{invoice.notes}</p>
             </div>
           )}
         </div>
