@@ -1,6 +1,50 @@
-import { Invoice } from "./types";
+import { Invoice, UserSettings, SavedClient } from "./types";
 
 const STORAGE_KEY = "billflow_invoices";
+const SETTINGS_KEY = "billflow_settings";
+
+const DEFAULT_SETTINGS: UserSettings = {
+  tier: "free",
+  savedClients: [],
+};
+
+export function getSettings(): UserSettings {
+  if (typeof window === "undefined") return DEFAULT_SETTINGS;
+  const data = localStorage.getItem(SETTINGS_KEY);
+  return data ? { ...DEFAULT_SETTINGS, ...JSON.parse(data) } : DEFAULT_SETTINGS;
+}
+
+export function saveSettings(settings: Partial<UserSettings>): UserSettings {
+  const current = getSettings();
+  const updated = { ...current, ...settings };
+  localStorage.setItem(SETTINGS_KEY, JSON.stringify(updated));
+  return updated;
+}
+
+export function isPremium(): boolean {
+  return getSettings().tier === "premium";
+}
+
+export function getSavedClients(): SavedClient[] {
+  return getSettings().savedClients;
+}
+
+export function saveClient(client: SavedClient): void {
+  const settings = getSettings();
+  const existing = settings.savedClients.findIndex((c) => c.id === client.id);
+  if (existing !== -1) {
+    settings.savedClients[existing] = client;
+  } else {
+    settings.savedClients.push(client);
+  }
+  saveSettings(settings);
+}
+
+export function deleteClient(id: string): void {
+  const settings = getSettings();
+  settings.savedClients = settings.savedClients.filter((c) => c.id !== id);
+  saveSettings(settings);
+}
 
 export function getInvoices(): Invoice[] {
   if (typeof window === "undefined") return [];

@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { InvoiceItem } from "@/lib/types";
-import { saveInvoice } from "@/lib/db";
+import { saveInvoice, isPremium, getSavedClients, saveClient } from "@/lib/db";
 
 export default function NewInvoicePage() {
   const router = useRouter();
@@ -20,6 +20,13 @@ export default function NewInvoicePage() {
     { id: crypto.randomUUID(), kind: "item", description: "", quantity: 1, rate: 0 },
   ]);
   const [submitting, setSubmitting] = useState(false);
+  const [premium, setPremium] = useState(false);
+  const [savedClients, setSavedClients] = useState<{ id: string; name: string; email: string }[]>([]);
+
+  useEffect(() => {
+    setPremium(isPremium());
+    setSavedClients(getSavedClients());
+  }, []);
 
   const addItem = () => {
     setItems([...items, { id: crypto.randomUUID(), kind: "item", description: "", quantity: 1, rate: 0 }]);
@@ -43,7 +50,7 @@ export default function NewInvoicePage() {
     setSubmitting(true);
     const id = crypto.randomUUID();
     const finalInvoiceNumber = invoiceNumber.trim() || `INV-${Date.now().toString(36).toUpperCase()}`;
-    saveInvoice({
+    const invoice = {
       id,
       invoiceNumber: finalInvoiceNumber,
       senderName,
@@ -54,12 +61,21 @@ export default function NewInvoicePage() {
       taxRate,
       notes,
       dueDate,
-      status: "draft",
+      status: "draft" as const,
       createdAt: new Date().toISOString(),
       subtotal,
       tax,
       total,
-    });
+    };
+    // Always save (needed for the detail/PDF page), but free users get cleared after download
+    saveInvoice(invoice);
+    // Premium: auto-save client for reuse
+    if (premium && clientName) {
+      const existingClient = savedClients.find((c) => c.name === clientName);
+      if (!existingClient) {
+        saveClient({ id: crypto.randomUUID(), name: clientName, email: clientEmail });
+      }
+    }
     router.push(`/invoices/${id}`);
   };
 
@@ -121,6 +137,27 @@ export default function NewInvoicePage() {
           </div>
 
           {/* Client Info */}
+          {premium && savedClients.length > 0 && (
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-zinc-400">Load Saved Client</label>
+              <select
+                onChange={(e) => {
+                  const client = savedClients.find((c) => c.id === e.target.value);
+                  if (client) {
+                    setClientName(client.name);
+                    setClientEmail(client.email);
+                  }
+                }}
+                defaultValue=""
+                className={inputClass}
+              >
+                <option value="" disabled>Select a saved client...</option>
+                {savedClients.map((c) => (
+                  <option key={c.id} value={c.id}>{c.name}</option>
+                ))}
+              </select>
+            </div>
+          )}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <label className="text-sm font-medium text-zinc-400">Client Name *</label>

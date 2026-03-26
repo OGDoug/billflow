@@ -1,3 +1,17 @@
+export type UserTier = "free" | "premium";
+
+export interface UserSettings {
+  tier: UserTier;
+  logo?: string; // base64 data URL
+  savedClients: SavedClient[];
+}
+
+export interface SavedClient {
+  id: string;
+  name: string;
+  email: string;
+}
+
 export interface InvoiceItem {
   id: string;
   kind: "item" | "service";
