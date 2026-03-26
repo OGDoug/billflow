@@ -13,6 +13,8 @@ export default function NewInvoicePage() {
   const [senderAddress, setSenderAddress] = useState("");
   const [clientName, setClientName] = useState("");
   const [clientEmail, setClientEmail] = useState("");
+  const [clientPhone, setClientPhone] = useState("");
+  const [clientAddress, setClientAddress] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [taxRate, setTaxRate] = useState(0);
   const [notes, setNotes] = useState("");
@@ -83,6 +85,8 @@ export default function NewInvoicePage() {
       template: premium ? template : "classic",
       clientName,
       clientEmail,
+      clientPhone,
+      clientAddress,
       items,
       taxRate,
       notes,
@@ -99,7 +103,7 @@ export default function NewInvoicePage() {
     if (premium && clientName) {
       const existingClient = savedClients.find((c) => c.name === clientName);
       if (!existingClient) {
-        saveClient({ id: crypto.randomUUID(), name: clientName, email: clientEmail });
+        saveClient({ id: crypto.randomUUID(), name: clientName, email: clientEmail, phone: clientPhone, address: clientAddress });
       }
     }
     router.push(`/invoices/${id}`);
@@ -249,6 +253,8 @@ export default function NewInvoicePage() {
                   if (client) {
                     setClientName(client.name);
                     setClientEmail(client.email);
+                    setClientPhone(client.phone || "");
+                    setClientAddress(client.address || "");
                   }
                 }}
                 defaultValue=""
@@ -279,6 +285,29 @@ export default function NewInvoicePage() {
                 value={clientEmail}
                 onChange={(e) => setClientEmail(e.target.value)}
                 placeholder="billing@acme.com"
+                className={inputClass}
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-zinc-400">Client Phone</label>
+              <input
+                type="tel"
+                value={clientPhone}
+                onChange={(e) => setClientPhone(e.target.value)}
+                placeholder="(555) 123-4567"
+                className={inputClass}
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-zinc-400">Client Address</label>
+              <textarea
+                value={clientAddress}
+                onChange={(e) => setClientAddress(e.target.value)}
+                placeholder={"123 Main St\nCity, State 12345"}
+                rows={2}
                 className={inputClass}
               />
             </div>

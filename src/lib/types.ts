@@ -10,6 +10,8 @@ export interface SavedClient {
   id: string;
   name: string;
   email: string;
+  phone: string;
+  address: string;
 }
 
 export interface InvoiceItem {
@@ -30,6 +32,8 @@ export interface Invoice {
   logo?: string;
   clientName: string;
   clientEmail: string;
+  clientPhone: string;
+  clientAddress: string;
   items: InvoiceItem[];
   taxRate: number;
   notes: string;

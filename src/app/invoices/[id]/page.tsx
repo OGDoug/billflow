@@ -76,10 +76,24 @@ export default function InvoiceDetailPage() {
     doc.setTextColor(...pc.textColor);
     doc.setFontSize(12);
     doc.text(invoice.clientName, 20, billToY + 8);
+    let clientY = billToY + 14;
     if (invoice.clientEmail) {
       doc.setFontSize(10);
       doc.setTextColor(...pc.subtextColor);
-      doc.text(invoice.clientEmail, 20, billToY + 14);
+      doc.text(invoice.clientEmail, 20, clientY);
+      clientY += 6;
+    }
+    if (invoice.clientPhone) {
+      doc.setFontSize(10);
+      doc.setTextColor(...pc.subtextColor);
+      doc.text(invoice.clientPhone, 20, clientY);
+      clientY += 6;
+    }
+    if (invoice.clientAddress) {
+      doc.setFontSize(9);
+      doc.setTextColor(...pc.subtextColor);
+      const addrLines = doc.splitTextToSize(invoice.clientAddress, 80);
+      doc.text(addrLines, 20, clientY);
     }
 
     // Table
@@ -250,6 +264,12 @@ export default function InvoiceDetailPage() {
               <p className={t.text}>{invoice.clientName}</p>
               {invoice.clientEmail && (
                 <p className={t.subtext}>{invoice.clientEmail}</p>
+              )}
+              {invoice.clientPhone && (
+                <p className={t.subtext}>{invoice.clientPhone}</p>
+              )}
+              {invoice.clientAddress && (
+                <p className={`${t.subtext} whitespace-pre-wrap`}>{invoice.clientAddress}</p>
               )}
             </div>
           </div>
