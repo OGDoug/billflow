@@ -23,7 +23,7 @@ export default function NewInvoicePage() {
   ]);
   const [submitting, setSubmitting] = useState(false);
   const [premium, setPremium] = useState(false);
-  const [savedClients, setSavedClients] = useState<{ id: string; name: string; email: string }[]>([]);
+  const [savedClients, setSavedClients] = useState<{ id: string; name: string; email: string; phone: string; address: string }[]>([]);
   const [logo, setLogo] = useState<string | undefined>(undefined);
   const [template, setTemplate] = useState<InvoiceTemplate>("classic");
 
