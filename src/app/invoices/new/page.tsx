@@ -162,7 +162,7 @@ export default function NewInvoicePage() {
                 min="0"
                 max="100"
                 step="0.1"
-                value={taxRate}
+                value={taxRate || ""}
                 onChange={(e) => setTaxRate(parseFloat(e.target.value) || 0)}
                 className={inputClass}
               />
