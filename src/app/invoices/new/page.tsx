@@ -207,7 +207,7 @@ export default function NewInvoicePage() {
             </div>
             {!premium && (
               <p className="text-xs text-zinc-500 mt-1">
-                🔒 Upgrade to <span className="text-blue-400">Pro</span> to unlock all invoice styles. Your free invoice uses the Classic style.
+                🔒 Upgrade to <span className="text-blue-400">Pro</span> to unlock all invoice styles. Free invoices use the Classic style.
               </p>
             )}
           </div>
