@@ -25,6 +25,7 @@ export interface Invoice {
   invoiceNumber: string;
   senderName: string;
   senderAddress: string;
+  logo?: string;
   clientName: string;
   clientEmail: string;
   items: InvoiceItem[];

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { InvoiceItem } from "@/lib/types";
-import { saveInvoice, isPremium, getSavedClients, saveClient } from "@/lib/db";
+import { saveInvoice, isPremium, getSavedClients, saveClient, getSettings, saveSettings } from "@/lib/db";
 
 export default function NewInvoicePage() {
   const router = useRouter();
@@ -22,11 +22,34 @@ export default function NewInvoicePage() {
   const [submitting, setSubmitting] = useState(false);
   const [premium, setPremium] = useState(false);
   const [savedClients, setSavedClients] = useState<{ id: string; name: string; email: string }[]>([]);
+  const [logo, setLogo] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     setPremium(isPremium());
     setSavedClients(getSavedClients());
+    setLogo(getSettings().logo);
   }, []);
+
+  const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 500_000) {
+      alert("Logo must be under 500KB");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUrl = reader.result as string;
+      setLogo(dataUrl);
+      saveSettings({ logo: dataUrl });
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const removeLogo = () => {
+    setLogo(undefined);
+    saveSettings({ logo: undefined });
+  };
 
   const addItem = () => {
     setItems([...items, { id: crypto.randomUUID(), kind: "item", description: "", quantity: 1, rate: 0 }]);
@@ -55,6 +78,7 @@ export default function NewInvoicePage() {
       invoiceNumber: finalInvoiceNumber,
       senderName,
       senderAddress,
+      logo: premium ? logo : undefined,
       clientName,
       clientEmail,
       items,
@@ -108,6 +132,33 @@ export default function NewInvoicePage() {
               className={inputClass}
             />
           </div>
+
+          {/* Logo Upload (Premium) */}
+          {premium && (
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-zinc-400">Company Logo</label>
+              {logo ? (
+                <div className="flex items-center gap-4">
+                  <img src={logo} alt="Logo" className="h-16 w-auto rounded border border-zinc-700" />
+                  <button
+                    type="button"
+                    onClick={removeLogo}
+                    className="text-xs text-red-400 hover:text-red-300 transition-colors"
+                  >
+                    Remove
+                  </button>
+                </div>
+              ) : (
+                <input
+                  type="file"
+                  accept="image/png,image/jpeg,image/svg+xml"
+                  onChange={handleLogoUpload}
+                  className="text-sm text-zinc-400 file:mr-3 file:rounded-lg file:border file:border-zinc-700 file:bg-zinc-900 file:px-3 file:py-2 file:text-sm file:text-zinc-300 file:cursor-pointer hover:file:bg-zinc-800 file:transition-colors"
+                />
+              )}
+              <p className="text-xs text-zinc-600">PNG, JPG, or SVG · Max 500KB · Saved for all invoices</p>
+            </div>
+          )}
 
           {/* From (Sender) Info */}
           <div className="space-y-4">

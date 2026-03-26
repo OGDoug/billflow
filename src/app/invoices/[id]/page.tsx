@@ -29,16 +29,28 @@ export default function InvoiceDetailPage() {
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
 
-    // Header — Sender info (upper left)
+    // Logo (upper left, above sender info)
+    let logoOffset = 0;
+    if (invoice.logo) {
+      try {
+        doc.addImage(invoice.logo, "AUTO", 20, 12, 30, 30);
+        logoOffset = 35;
+      } catch {
+        // Skip logo if format unsupported
+      }
+    }
+
+    // Header — Sender info
+    const senderX = 20 + logoOffset;
     doc.setFontSize(14);
     doc.setTextColor(30, 30, 30);
-    doc.text(invoice.senderName || "Your Business", 20, 20);
+    doc.text(invoice.senderName || "Your Business", senderX, 20);
     let senderY = 26;
     if (invoice.senderAddress) {
       doc.setFontSize(9);
       doc.setTextColor(100, 100, 100);
       const addrLines = doc.splitTextToSize(invoice.senderAddress, 80);
-      doc.text(addrLines, 20, senderY);
+      doc.text(addrLines, senderX, senderY);
       senderY += addrLines.length * 4.5;
     }
 
@@ -192,11 +204,16 @@ export default function InvoiceDetailPage() {
         <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-8 space-y-8">
           {/* Header */}
           <div className="flex justify-between items-start">
-            <div>
-              <h1 className="text-3xl font-bold tracking-tight">INVOICE</h1>
-              <p className="text-sm text-zinc-500 font-mono mt-1">
-                {invoice.invoiceNumber}
-              </p>
+            <div className="flex items-center gap-4">
+              {invoice.logo && (
+                <img src={invoice.logo} alt="Logo" className="h-14 w-auto" />
+              )}
+              <div>
+                <h1 className="text-3xl font-bold tracking-tight">INVOICE</h1>
+                <p className="text-sm text-zinc-500 font-mono mt-1">
+                  {invoice.invoiceNumber}
+                </p>
+              </div>
             </div>
             <span className={`rounded-full px-3 py-1 text-xs font-medium ${statusColors[invoice.status]}`}>
               {invoice.status}
