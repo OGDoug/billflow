@@ -149,7 +149,8 @@ export default function InvoiceDetailPage() {
     doc.text(`$${invoice.subtotal.toFixed(2)}`, rightX, finalY, { align: "right" });
 
     if (invoice.taxRate > 0) {
-      doc.text(`Tax (${invoice.taxRate}%):`, rightX - 50, finalY + 7);
+      const taxLabel = invoice.servicesTaxable ? `Tax (${invoice.taxRate}%):` : `Tax (${invoice.taxRate}%, items only):`;
+      doc.text(taxLabel, rightX - 60, finalY + 7);
       doc.text(`$${invoice.tax.toFixed(2)}`, rightX, finalY + 7, { align: "right" });
     }
 
@@ -323,7 +324,7 @@ export default function InvoiceDetailPage() {
               </div>
               {invoice.taxRate > 0 && (
                 <div className={`flex justify-between text-sm ${t.subtext}`}>
-                  <span>Tax ({invoice.taxRate}%)</span>
+                  <span>Tax ({invoice.taxRate}%{!invoice.servicesTaxable && ", items only"})</span>
                   <span className="tabular-nums">${invoice.tax.toFixed(2)}</span>
                 </div>
               )}

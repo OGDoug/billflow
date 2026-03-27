@@ -44,6 +44,7 @@ export interface Invoice {
   clientAddress: string;
   items: InvoiceItem[];
   taxRate: number;
+  servicesTaxable: boolean;
   notes: string;
   dueDate: string;
   status: "draft" | "sent" | "paid";

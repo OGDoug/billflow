@@ -18,6 +18,7 @@ export default function NewInvoicePage() {
   const [dueDate, setDueDate] = useState("");
   const [taxRate, setTaxRate] = useState(0);
   const [notes, setNotes] = useState("");
+  const [servicesTaxable, setServicesTaxable] = useState(false);
   const [items, setItems] = useState<InvoiceItem[]>([
     { id: crypto.randomUUID(), kind: "item", description: "", quantity: 1, rate: 0 },
   ]);
@@ -68,7 +69,11 @@ export default function NewInvoicePage() {
   };
 
   const subtotal = items.reduce((s, i) => s + (i.kind === "service" ? 1 : i.quantity) * i.rate, 0);
-  const tax = subtotal * (taxRate / 100);
+  const taxableAmount = items.reduce((s, i) => {
+    if (i.kind === "service" && !servicesTaxable) return s;
+    return s + (i.kind === "service" ? 1 : i.quantity) * i.rate;
+  }, 0);
+  const tax = taxableAmount * (taxRate / 100);
   const total = subtotal + tax;
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -89,6 +94,7 @@ export default function NewInvoicePage() {
       clientAddress,
       items,
       taxRate,
+      servicesTaxable,
       notes,
       dueDate,
       status: "draft" as const,
@@ -340,6 +346,20 @@ export default function NewInvoicePage() {
               />
             </div>
           </div>
+
+          {/* Services Taxable checkbox - only show when there are services and a tax rate */}
+          {taxRate > 0 && items.some((i) => i.kind === "service") && (
+            <label className="flex items-center gap-2 text-sm text-zinc-400 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={servicesTaxable}
+                onChange={(e) => setServicesTaxable(e.target.checked)}
+                className="rounded border-zinc-700 bg-zinc-900 text-blue-500 focus:ring-blue-500"
+              />
+              Services Taxable
+              <span className="text-xs text-zinc-600">(varies by state)</span>
+            </label>
+          )}
 
           {/* Line Items */}
           <div className="space-y-4">
