@@ -27,7 +27,20 @@ export function saveSettings(settings: Partial<UserSettings>): UserSettings {
 }
 
 export function isPremium(): boolean {
+  return getSettings().tier === "pro" || getSettings().tier === "premium";
+}
+
+export function isPremiumTier(): boolean {
   return getSettings().tier === "premium";
+}
+
+export function updateInvoice(id: string, updates: Partial<Invoice>): void {
+  const invoices = getInvoices();
+  const idx = invoices.findIndex((inv) => inv.id === id);
+  if (idx !== -1) {
+    invoices[idx] = { ...invoices[idx], ...updates };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(invoices));
+  }
 }
 
 export function getSavedClients(): SavedClient[] {

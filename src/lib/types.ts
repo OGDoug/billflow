@@ -1,4 +1,4 @@
-export type UserTier = "free" | "premium";
+export type UserTier = "free" | "pro" | "premium";
 
 export interface UserSettings {
   tier: UserTier;
@@ -47,8 +47,11 @@ export interface Invoice {
   servicesTaxable: boolean;
   notes: string;
   dueDate: string;
-  status: "draft" | "sent" | "paid";
+  status: "draft" | "sent" | "paid" | "partial" | "overdue";
   createdAt: string;
+  paidAt?: string;
+  paidNote?: string;
+  paidAmount?: number;
   subtotal: number;
   tax: number;
   total: number;

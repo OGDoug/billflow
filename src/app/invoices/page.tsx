@@ -3,11 +3,13 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Invoice } from "@/lib/types";
-import { getInvoices, updateInvoiceStatus, deleteInvoice as removeInvoice, isPremium, fmt } from "@/lib/db";
+import { getInvoices, updateInvoiceStatus, deleteInvoice as removeInvoice, isPremium, isPremiumTier, updateInvoice, fmt } from "@/lib/db";
 
 const statusColors: Record<string, string> = {
   draft: "bg-zinc-700 text-zinc-300",
   sent: "bg-yellow-900/50 text-yellow-400",
+  partial: "bg-orange-900/50 text-orange-400",
+  overdue: "bg-red-900/50 text-red-400",
   paid: "bg-green-900/50 text-green-400",
 };
 
@@ -17,14 +19,19 @@ export default function InvoicesPage() {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [loading, setLoading] = useState(true);
   const [premium, setPremium] = useState(false);
+  const [premiumTier, setPremiumTier] = useState(false);
   const [sortBy, setSortBy] = useState<SortField>("date");
   const [sortAsc, setSortAsc] = useState(false);
   const [filterClient, setFilterClient] = useState("");
   const [filterStatus, setFilterStatus] = useState<string>("all");
   const [search, setSearch] = useState("");
+  const [payModal, setPayModal] = useState<string | null>(null);
+  const [payNote, setPayNote] = useState("");
+  const [payAmount, setPayAmount] = useState("");
 
   const fetchInvoices = () => {
     setPremium(isPremium());
+    setPremiumTier(isPremiumTier());
     setInvoices(getInvoices());
     setLoading(false);
   };
@@ -41,6 +48,42 @@ export default function InvoicesPage() {
     removeInvoice(id);
     fetchInvoices();
   };
+
+  const handleMarkPaid = (id: string) => {
+    const amt = payAmount ? parseFloat(payAmount) : undefined;
+    const inv = invoices.find((i) => i.id === id);
+    const isPartial = amt !== undefined && inv && amt < inv.total;
+    updateInvoice(id, {
+      status: isPartial ? "partial" : "paid",
+      paidAt: new Date().toISOString(),
+      paidNote: payNote || undefined,
+      paidAmount: amt,
+    });
+    setPayModal(null);
+    setPayNote("");
+    setPayAmount("");
+    fetchInvoices();
+  };
+
+  // A/R helpers
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const getDaysUntilDue = (dueDate: string) => {
+    const due = new Date(dueDate);
+    due.setHours(0, 0, 0, 0);
+    return Math.ceil((due.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+  };
+
+  const overdueInvoices = invoices.filter(
+    (inv) => inv.status !== "paid" && inv.status !== "draft" && getDaysUntilDue(inv.dueDate) < 0
+  );
+  const dueSoonInvoices = invoices.filter(
+    (inv) => inv.status !== "paid" && inv.status !== "draft" && getDaysUntilDue(inv.dueDate) >= 0 && getDaysUntilDue(inv.dueDate) <= 3
+  );
+  const totalOutstanding = invoices
+    .filter((inv) => inv.status !== "paid" && inv.status !== "draft")
+    .reduce((s, inv) => s + inv.total - (inv.paidAmount || 0), 0);
 
   // Get unique client names for filter dropdown
   const uniqueClients = Array.from(new Set(invoices.map((inv) => inv.clientName))).sort();
@@ -173,6 +216,58 @@ export default function InvoicesPage() {
           </Link>
         </div>
 
+        {/* A/R Alerts — Premium tier */}
+        {premiumTier && (overdueInvoices.length > 0 || dueSoonInvoices.length > 0) && (
+          <div className="space-y-2 mb-6">
+            {overdueInvoices.map((inv) => (
+              <div key={inv.id} className="flex items-center justify-between rounded-lg border border-red-500/30 bg-red-950/30 px-4 py-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-red-400 text-sm">🔴</span>
+                  <span className="text-sm text-red-300">
+                    <span className="font-mono">{inv.invoiceNumber}</span> for <span className="font-medium">{inv.clientName}</span> is {Math.abs(getDaysUntilDue(inv.dueDate))} day{Math.abs(getDaysUntilDue(inv.dueDate)) !== 1 ? "s" : ""} overdue
+                  </span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="text-sm font-semibold text-red-400 tabular-nums">${fmt(inv.total - (inv.paidAmount || 0))}</span>
+                  <button onClick={() => setPayModal(inv.id)} className="text-xs text-blue-400 hover:text-blue-300">Mark Paid</button>
+                </div>
+              </div>
+            ))}
+            {dueSoonInvoices.map((inv) => (
+              <div key={inv.id} className="flex items-center justify-between rounded-lg border border-yellow-500/30 bg-yellow-950/20 px-4 py-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-yellow-400 text-sm">🟡</span>
+                  <span className="text-sm text-yellow-300">
+                    <span className="font-mono">{inv.invoiceNumber}</span> for <span className="font-medium">{inv.clientName}</span> is due {getDaysUntilDue(inv.dueDate) === 0 ? "today" : `in ${getDaysUntilDue(inv.dueDate)} day${getDaysUntilDue(inv.dueDate) !== 1 ? "s" : ""}`}
+                  </span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="text-sm font-semibold text-yellow-400 tabular-nums">${fmt(inv.total)}</span>
+                  <button onClick={() => setPayModal(inv.id)} className="text-xs text-blue-400 hover:text-blue-300">Mark Paid</button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* A/R Summary — Premium tier */}
+        {premiumTier && invoices.length > 0 && (
+          <div className="grid grid-cols-3 gap-4 mb-6">
+            <div className="rounded-lg border border-zinc-800 bg-zinc-900/50 p-4 text-center">
+              <p className="text-xs text-zinc-500 uppercase tracking-wider mb-1">Outstanding</p>
+              <p className="text-xl font-bold tabular-nums">${fmt(totalOutstanding)}</p>
+            </div>
+            <div className="rounded-lg border border-zinc-800 bg-zinc-900/50 p-4 text-center">
+              <p className="text-xs text-zinc-500 uppercase tracking-wider mb-1">Overdue</p>
+              <p className="text-xl font-bold text-red-400 tabular-nums">{overdueInvoices.length}</p>
+            </div>
+            <div className="rounded-lg border border-zinc-800 bg-zinc-900/50 p-4 text-center">
+              <p className="text-xs text-zinc-500 uppercase tracking-wider mb-1">Due Soon</p>
+              <p className="text-xl font-bold text-yellow-400 tabular-nums">{dueSoonInvoices.length}</p>
+            </div>
+          </div>
+        )}
+
         {/* Filters & Search */}
         <div className="flex flex-wrap gap-3 mb-6">
           <input
@@ -199,6 +294,8 @@ export default function InvoicesPage() {
             <option value="all">All Status</option>
             <option value="draft">Draft</option>
             <option value="sent">Sent</option>
+            <option value="partial">Partial</option>
+            <option value="overdue">Overdue</option>
             <option value="paid">Paid</option>
           </select>
         </div>
@@ -258,7 +355,14 @@ export default function InvoicesPage() {
                   <p className="text-xs text-zinc-500">
                     Due {new Date(inv.dueDate).toLocaleDateString()} · Created{" "}
                     {new Date(inv.createdAt).toLocaleDateString()}
+                    {inv.paidAt && <span className="text-green-500"> · Paid {new Date(inv.paidAt).toLocaleDateString()}</span>}
+                    {inv.paidNote && <span className="text-zinc-600"> — {inv.paidNote}</span>}
                   </p>
+                  {premiumTier && inv.status === "partial" && inv.paidAmount != null && (
+                    <p className="text-xs text-orange-400">
+                      Received ${fmt(inv.paidAmount)} · Remaining ${fmt(inv.total - inv.paidAmount)}
+                    </p>
+                  )}
                 </div>
                 <div className="flex items-center gap-4">
                   <span className="text-lg font-semibold tabular-nums">
@@ -278,8 +382,18 @@ export default function InvoicesPage() {
                     >
                       <option value="draft">Draft</option>
                       <option value="sent">Sent</option>
+                      <option value="partial">Partial</option>
+                      <option value="overdue">Overdue</option>
                       <option value="paid">Paid</option>
                     </select>
+                    {premiumTier && inv.status !== "paid" && (
+                      <button
+                        onClick={() => { setPayModal(inv.id); setPayAmount(""); setPayNote(""); }}
+                        className="rounded px-2 py-1 text-xs text-green-400 hover:text-green-300 hover:bg-zinc-800 transition-colors"
+                      >
+                        💰 Paid
+                      </button>
+                    )}
                     <button
                       onClick={() => handleDelete(inv.id)}
                       className="rounded px-2 py-1 text-xs text-red-400 hover:text-red-300 hover:bg-zinc-800 transition-colors"
@@ -293,6 +407,51 @@ export default function InvoicesPage() {
           </div>
         )}
       </main>
+
+      {/* Mark Paid Modal */}
+      {payModal && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-4" onClick={() => setPayModal(null)}>
+          <div className="rounded-xl border border-zinc-700 bg-zinc-900 p-6 w-full max-w-sm space-y-4" onClick={(e) => e.stopPropagation()}>
+            <h3 className="text-lg font-bold">Mark as Paid</h3>
+            <div className="space-y-2">
+              <label className="text-sm text-zinc-400">Amount Received</label>
+              <input
+                type="number"
+                min="0"
+                step="0.01"
+                value={payAmount}
+                onChange={(e) => setPayAmount(e.target.value)}
+                placeholder={`Full amount: $${fmt(invoices.find((i) => i.id === payModal)?.total || 0)}`}
+                className="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white placeholder-zinc-500 outline-none focus:border-blue-500"
+              />
+              <p className="text-xs text-zinc-600">Leave blank for full payment</p>
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm text-zinc-400">Note (optional)</label>
+              <input
+                value={payNote}
+                onChange={(e) => setPayNote(e.target.value)}
+                placeholder="Check #1234, Venmo, etc."
+                className="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white placeholder-zinc-500 outline-none focus:border-blue-500"
+              />
+            </div>
+            <div className="flex gap-2 pt-2">
+              <button
+                onClick={() => handleMarkPaid(payModal)}
+                className="flex-1 rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-500 transition-colors"
+              >
+                Confirm Payment
+              </button>
+              <button
+                onClick={() => setPayModal(null)}
+                className="rounded-lg border border-zinc-700 px-4 py-2 text-sm text-zinc-400 hover:bg-zinc-800 transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
