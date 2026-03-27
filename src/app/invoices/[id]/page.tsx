@@ -198,7 +198,7 @@ export default function InvoiceDetailPage() {
     <div className="min-h-screen">
       <nav className="border-b border-zinc-800 px-6 py-4 flex items-center justify-between">
         <Link href="/" className="text-xl font-bold tracking-tight">
-          <img src="/duxbill-logo.jpg" alt="" className="h-7 w-auto inline-block" /><span className="text-white">Dux</span>
+          <img src="/duxbill-nav.png" alt="" className="h-7 w-auto inline-block" /><span className="text-white">Dux</span>
           <span className="text-blue-500">bill</span>
         </Link>
         <div className="flex items-center gap-3">

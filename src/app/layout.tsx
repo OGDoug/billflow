@@ -12,12 +12,17 @@ export const metadata: Metadata = {
     url: "https://get-billflow.vercel.app",
     siteName: "Duxbill",
     type: "website",
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Duxbill — Free Invoice Generator",
     description: "Create professional invoices in seconds. No signup. 100% free.",
     creator: "@BrickBWoodstock",
+  },
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
   },
   robots: {
     index: true,
