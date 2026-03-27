@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Invoice } from "@/lib/types";
-import { getInvoices, updateInvoiceStatus, deleteInvoice as removeInvoice, isPremium, isPremiumTier, updateInvoice, fmt } from "@/lib/db";
+import { getInvoices, updateInvoiceStatus, deleteInvoice as removeInvoice, isPremium, isPremiumTier, updateInvoice, getSettings, fmt } from "@/lib/db";
 
 const statusColors: Record<string, string> = {
   draft: "bg-zinc-700 text-zinc-300",
@@ -211,9 +211,27 @@ export default function InvoicesPage() {
               Pro
             </span>
           </div>
-          <Link href="/mailing-list" className="text-sm text-zinc-400 hover:text-white transition-colors">
-            Mailing List →
-          </Link>
+          <div className="flex items-center gap-4">
+            {premium && getSettings().stripeSessionId && (
+              <button
+                onClick={async () => {
+                  const res = await fetch("/api/portal", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ sessionId: getSettings().stripeSessionId }),
+                  });
+                  const data = await res.json();
+                  if (data.url) window.location.href = data.url;
+                }}
+                className="text-sm text-zinc-500 hover:text-white transition-colors"
+              >
+                Manage Subscription
+              </button>
+            )}
+            <Link href="/mailing-list" className="text-sm text-zinc-400 hover:text-white transition-colors">
+              Mailing List →
+            </Link>
+          </div>
         </div>
 
         {/* A/R Alerts — Premium tier */}

@@ -3,6 +3,7 @@ export type UserTier = "free" | "pro" | "premium";
 export interface UserSettings {
   tier: UserTier;
   logo?: string; // base64 data URL
+  stripeSessionId?: string; // Checkout session ID for portal access
   savedClients: SavedClient[];
   mailingList: MailingListEntry[];
 }
