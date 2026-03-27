@@ -14,13 +14,13 @@ export default function Home() {
     },
     {
       icon: "📊",
-      title: "Track Status",
+      title: "Track Status (Pro)",
       desc: "Mark invoices as draft, sent, or paid. Always know where your money stands.",
     },
     {
       icon: "🔒",
       title: "Private & Secure",
-      desc: "Your data stays in your browser. No accounts, no servers, no tracking.",
+      desc: "Your data stays in your browser. No account required, no servers, no tracking.",
     },
     {
       icon: "⚡",
