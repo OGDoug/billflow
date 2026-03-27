@@ -70,7 +70,7 @@ export default function MailingListPage() {
       <div className="min-h-screen">
         <nav className="border-b border-zinc-800 px-6 py-4 flex items-center justify-between">
           <Link href="/" className="text-xl font-bold tracking-tight">
-            <span className="flex items-center gap-1.5"><img src="/duxbill-nav.png?v=2" alt="" className="h-6 w-auto" /><span><span className="text-white">Dux</span>
+            <span className="flex items-center gap-0.5"><img src="/duxbill-nav.png?v=2" alt="" className="h-6 w-auto" /><span><span className="text-white">Dux</span>
             <span className="text-blue-500">bill</span></span></span>
           </Link>
           <Link href="/invoices/new" className="text-sm text-zinc-400 hover:text-white transition-colors">
@@ -105,7 +105,7 @@ export default function MailingListPage() {
     <div className="min-h-screen">
       <nav className="border-b border-zinc-800 px-6 py-4 flex items-center justify-between">
         <Link href="/" className="text-xl font-bold tracking-tight">
-          <span className="flex items-center gap-1.5"><img src="/duxbill-nav.png?v=2" alt="" className="h-6 w-auto" /><span><span className="text-white">Dux</span>
+          <span className="flex items-center gap-0.5"><img src="/duxbill-nav.png?v=2" alt="" className="h-6 w-auto" /><span><span className="text-white">Dux</span>
           <span className="text-blue-500">bill</span></span></span>
         </Link>
         <div className="flex items-center gap-3">
