@@ -162,10 +162,15 @@ export default function InvoicesPage() {
 
       <main className="max-w-4xl mx-auto px-6 py-10">
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold">Invoices</h1>
-          <span className="rounded-full bg-blue-600/20 px-3 py-1 text-xs font-medium text-blue-400">
-            Pro
-          </span>
+          <div className="flex items-center gap-3">
+            <h1 className="text-2xl font-bold">Invoices</h1>
+            <span className="rounded-full bg-blue-600/20 px-3 py-1 text-xs font-medium text-blue-400">
+              Pro
+            </span>
+          </div>
+          <Link href="/mailing-list" className="text-sm text-zinc-400 hover:text-white transition-colors">
+            Mailing List →
+          </Link>
         </div>
 
         {/* Filters & Search */}
