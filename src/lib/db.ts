@@ -1,5 +1,9 @@
 import { Invoice, UserSettings, SavedClient, MailingListEntry } from "./types";
 
+export function fmt(n: number): string {
+  return n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
 const STORAGE_KEY = "billflow_invoices";
 const SETTINGS_KEY = "billflow_settings";
 

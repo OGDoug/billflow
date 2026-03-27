@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { Invoice } from "@/lib/types";
-import { getInvoice, deleteInvoice, isPremium } from "@/lib/db";
+import { getInvoice, deleteInvoice, isPremium, fmt } from "@/lib/db";
 import { getTemplate } from "@/lib/templates";
 
 export default function InvoiceDetailPage() {
@@ -111,8 +111,8 @@ export default function InvoiceDetailPage() {
       return [
         item.description,
         item.kind === "service" ? "—" : item.quantity.toString(),
-        `$${item.rate.toFixed(2)}`,
-        `$${(qty * item.rate).toFixed(2)}`,
+        `$${fmt(item.rate)}`,
+        `$${fmt((qty * item.rate))}`,
       ];
     });
 
@@ -146,19 +146,19 @@ export default function InvoiceDetailPage() {
     doc.setFontSize(10);
     doc.setTextColor(...pc.subtextColor);
     doc.text("Subtotal:", rightX - 50, finalY);
-    doc.text(`$${invoice.subtotal.toFixed(2)}`, rightX, finalY, { align: "right" });
+    doc.text(`$${fmt(invoice.subtotal)}`, rightX, finalY, { align: "right" });
 
     if (invoice.taxRate > 0) {
       const taxLabel = invoice.servicesTaxable ? `Tax (${invoice.taxRate}%):` : `Tax (${invoice.taxRate}%, items only):`;
       doc.text(taxLabel, rightX - 60, finalY + 7);
-      doc.text(`$${invoice.tax.toFixed(2)}`, rightX, finalY + 7, { align: "right" });
+      doc.text(`$${fmt(invoice.tax)}`, rightX, finalY + 7, { align: "right" });
     }
 
     doc.setFontSize(13);
     doc.setTextColor(...pc.headingColor);
     const totalY = invoice.taxRate > 0 ? finalY + 18 : finalY + 10;
     doc.text("Total:", rightX - 50, totalY);
-    doc.text(`$${invoice.total.toFixed(2)}`, rightX, totalY, { align: "right" });
+    doc.text(`$${fmt(invoice.total)}`, rightX, totalY, { align: "right" });
 
     // Notes
     if (invoice.notes) {
@@ -304,9 +304,9 @@ export default function InvoiceDetailPage() {
                       <td className="px-4 py-3 text-center tabular-nums">
                         {item.kind === "service" ? "—" : item.quantity}
                       </td>
-                      <td className="px-4 py-3 text-right tabular-nums">${item.rate.toFixed(2)}</td>
+                      <td className="px-4 py-3 text-right tabular-nums">${fmt(item.rate)}</td>
                       <td className="px-4 py-3 text-right tabular-nums">
-                        ${(qty * item.rate).toFixed(2)}
+                        ${fmt((qty * item.rate))}
                       </td>
                     </tr>
                   );
@@ -320,17 +320,17 @@ export default function InvoiceDetailPage() {
             <div className="w-64 space-y-2">
               <div className={`flex justify-between text-sm ${t.subtext}`}>
                 <span>Subtotal</span>
-                <span className="tabular-nums">${invoice.subtotal.toFixed(2)}</span>
+                <span className="tabular-nums">${fmt(invoice.subtotal)}</span>
               </div>
               {invoice.taxRate > 0 && (
                 <div className={`flex justify-between text-sm ${t.subtext}`}>
                   <span>Tax ({invoice.taxRate}%{!invoice.servicesTaxable && ", items only"})</span>
-                  <span className="tabular-nums">${invoice.tax.toFixed(2)}</span>
+                  <span className="tabular-nums">${fmt(invoice.tax)}</span>
                 </div>
               )}
               <div className={`flex justify-between pt-3 ${t.totalBorder} ${t.totalText}`}>
                 <span>Total</span>
-                <span className="tabular-nums">${invoice.total.toFixed(2)}</span>
+                <span className="tabular-nums">${fmt(invoice.total)}</span>
               </div>
             </div>
           </div>

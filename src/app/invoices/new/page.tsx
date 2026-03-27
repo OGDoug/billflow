@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { InvoiceItem, InvoiceTemplate } from "@/lib/types";
-import { saveInvoice, isPremium, getSavedClients, saveClient, getSettings, saveSettings, addToMailingList } from "@/lib/db";
+import { saveInvoice, isPremium, getSavedClients, saveClient, getSettings, saveSettings, addToMailingList, fmt } from "@/lib/db";
 
 export default function NewInvoicePage() {
   const router = useRouter();
@@ -440,17 +440,17 @@ export default function NewInvoicePage() {
           <div className="rounded-lg border border-zinc-800 bg-zinc-900/50 p-5 space-y-2">
             <div className="flex justify-between text-sm text-zinc-400">
               <span>Subtotal</span>
-              <span className="tabular-nums">${subtotal.toFixed(2)}</span>
+              <span className="tabular-nums">${fmt(subtotal)}</span>
             </div>
             {taxRate > 0 && (
               <div className="flex justify-between text-sm text-zinc-400">
                 <span>Tax ({taxRate}%)</span>
-                <span className="tabular-nums">${tax.toFixed(2)}</span>
+                <span className="tabular-nums">${fmt(tax)}</span>
               </div>
             )}
             <div className="flex justify-between text-lg font-bold pt-2 border-t border-zinc-800">
               <span>Total</span>
-              <span className="tabular-nums">${total.toFixed(2)}</span>
+              <span className="tabular-nums">${fmt(total)}</span>
             </div>
           </div>
 

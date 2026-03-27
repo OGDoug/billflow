@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Invoice } from "@/lib/types";
-import { getInvoices, updateInvoiceStatus, deleteInvoice as removeInvoice, isPremium } from "@/lib/db";
+import { getInvoices, updateInvoiceStatus, deleteInvoice as removeInvoice, isPremium, fmt } from "@/lib/db";
 
 const statusColors: Record<string, string> = {
   draft: "bg-zinc-700 text-zinc-300",
@@ -262,7 +262,7 @@ export default function InvoicesPage() {
                 </div>
                 <div className="flex items-center gap-4">
                   <span className="text-lg font-semibold tabular-nums">
-                    ${inv.total.toFixed(2)}
+                    ${fmt(inv.total)}
                   </span>
                   <div className="flex items-center gap-1">
                     <Link
