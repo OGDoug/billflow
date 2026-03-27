@@ -43,18 +43,21 @@ export default function InvoiceDetailPage() {
       }
     }
 
-    // Header — Sender info
+    // Header — Sender info (left column)
     const senderX = 20 + logoOffset;
+    let cursorY = 20;
+
     doc.setFontSize(14);
     doc.setTextColor(...pc.headingColor);
-    doc.text(invoice.senderName || "Your Business", senderX, 20);
-    let senderY = 26;
+    doc.text(invoice.senderName || "Your Business", senderX, cursorY);
+    cursorY += 6;
+
     if (invoice.senderAddress) {
       doc.setFontSize(9);
       doc.setTextColor(...pc.subtextColor);
       const addrLines = doc.splitTextToSize(invoice.senderAddress, 80);
-      doc.text(addrLines, senderX, senderY);
-      senderY += addrLines.length * 4.5;
+      doc.text(addrLines, senderX, cursorY);
+      cursorY += addrLines.length * 4.5;
     }
 
     // Invoice title (upper right)
@@ -69,34 +72,40 @@ export default function InvoiceDetailPage() {
     doc.text(`Due: ${new Date(invoice.dueDate).toLocaleDateString()}`, pageWidth - 20, 40, { align: "right" });
 
     // Bill To
-    const billToY = Math.max(senderY + 10, 52);
+    cursorY = Math.max(cursorY + 8, 52);
     doc.setFontSize(10);
     doc.setTextColor(...pc.subtextColor);
-    doc.text("Bill To:", 20, billToY);
+    doc.text("Bill To:", 20, cursorY);
+    cursorY += 8;
+
     doc.setTextColor(...pc.textColor);
     doc.setFontSize(12);
-    doc.text(invoice.clientName, 20, billToY + 8);
-    let clientY = billToY + 14;
+    doc.text(invoice.clientName, 20, cursorY);
+    cursorY += 6;
+
     if (invoice.clientEmail) {
       doc.setFontSize(10);
       doc.setTextColor(...pc.subtextColor);
-      doc.text(invoice.clientEmail, 20, clientY);
-      clientY += 6;
+      doc.text(invoice.clientEmail, 20, cursorY);
+      cursorY += 5;
     }
     if (invoice.clientPhone) {
       doc.setFontSize(10);
       doc.setTextColor(...pc.subtextColor);
-      doc.text(invoice.clientPhone, 20, clientY);
-      clientY += 6;
+      doc.text(invoice.clientPhone, 20, cursorY);
+      cursorY += 5;
     }
     if (invoice.clientAddress) {
       doc.setFontSize(9);
       doc.setTextColor(...pc.subtextColor);
       const addrLines = doc.splitTextToSize(invoice.clientAddress, 80);
-      doc.text(addrLines, 20, clientY);
+      doc.text(addrLines, 20, cursorY);
+      cursorY += addrLines.length * 4.5;
     }
 
-    // Table
+    // Table — start below all header content with padding
+    const tableStartY = cursorY + 10;
+
     const tableData = invoice.items.map((item) => {
       const qty = item.kind === "service" ? 1 : item.quantity;
       return [
@@ -108,7 +117,7 @@ export default function InvoiceDetailPage() {
     });
 
     (doc as any).autoTable({
-      startY: 70,
+      startY: tableStartY,
       head: [["Description", "Qty", "Rate", "Amount"]],
       body: tableData,
       theme: "plain",
