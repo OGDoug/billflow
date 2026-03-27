@@ -104,8 +104,8 @@ export default function InvoicesPage() {
       <div className="min-h-screen">
         <nav className="border-b border-zinc-800 px-6 py-4 flex items-center justify-between">
           <Link href="/" className="text-xl font-bold tracking-tight">
-            <span className="text-white">Bill</span>
-            <span className="text-blue-500">Flow</span>
+            <img src="/duxbill-logo.jpg" alt="" className="h-7 w-auto inline-block" /><span className="text-white">Dux</span>
+            <span className="text-blue-500">bill</span>
           </Link>
           <Link
             href="/invoices/new"
@@ -119,7 +119,7 @@ export default function InvoicesPage() {
           <div className="text-5xl">📋</div>
           <h1 className="text-2xl font-bold">Invoice Archive</h1>
           <p className="text-zinc-400 max-w-md mx-auto">
-            Upgrade to <span className="text-blue-400 font-semibold">BillFlow Pro</span> to save, search, and manage all your invoices. Sort by client, filter by status, and never lose track of a payment.
+            Upgrade to <span className="text-blue-400 font-semibold">Duxbill Pro</span> to save, search, and manage all your invoices. Sort by client, filter by status, and never lose track of a payment.
           </p>
           <div className="flex flex-col items-center gap-3">
             <button className="rounded-lg bg-blue-600 px-8 py-3 text-sm font-medium text-white hover:bg-blue-500 transition-colors">
@@ -149,8 +149,8 @@ export default function InvoicesPage() {
     <div className="min-h-screen">
       <nav className="border-b border-zinc-800 px-6 py-4 flex items-center justify-between">
         <Link href="/" className="text-xl font-bold tracking-tight">
-          <span className="text-white">Bill</span>
-          <span className="text-blue-500">Flow</span>
+          <img src="/duxbill-logo.jpg" alt="" className="h-7 w-auto inline-block" /><span className="text-white">Dux</span>
+          <span className="text-blue-500">bill</span>
         </Link>
         <Link
           href="/invoices/new"

@@ -119,8 +119,8 @@ export default function NewInvoicePage() {
     <div className="min-h-screen">
       <nav className="border-b border-zinc-800 px-6 py-4 flex items-center justify-between">
         <Link href="/" className="text-xl font-bold tracking-tight">
-          <span className="text-white">Bill</span>
-          <span className="text-blue-500">Flow</span>
+          <img src="/duxbill-logo.jpg" alt="" className="h-7 w-auto inline-block" /><span className="text-white">Dux</span>
+          <span className="text-blue-500">bill</span>
         </Link>
         <Link href="/invoices" className="text-sm text-zinc-400 hover:text-white transition-colors">
           ← Back to Invoices

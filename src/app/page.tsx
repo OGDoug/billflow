@@ -39,8 +39,8 @@ export default function Home() {
       {/* Nav */}
       <nav className="border-b border-zinc-800/50 px-6 py-4 flex items-center justify-between backdrop-blur-sm sticky top-0 z-50 bg-zinc-950/80">
         <span className="text-xl font-bold tracking-tight">
-          <span className="text-white">Bill</span>
-          <span className="text-blue-500">Flow</span>
+          <img src="/duxbill-logo.jpg" alt="" className="h-7 w-auto inline-block" /><span className="text-white">Dux</span>
+          <span className="text-blue-500">bill</span>
         </span>
         <div className="flex items-center gap-6">
           <Link
@@ -185,7 +185,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="border-t border-zinc-800/50 px-6 py-8 text-center text-xs text-zinc-500">
-        <p>BillFlow — Built for freelancers who value their time.</p>
+        <p>Duxbill — Built for freelancers who value their time.</p>
         <p className="mt-2 text-zinc-600">
           Your data never leaves your browser. 100% private.
         </p>

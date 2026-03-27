@@ -2,20 +2,20 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "BillFlow — Free Invoice Generator for Freelancers",
+  title: "Duxbill — Free Invoice Generator for Freelancers & Small Business",
   description: "Create professional invoices in seconds. Export PDFs, track payments, all from your browser — no signup required. 100% free.",
-  keywords: ["invoice generator", "free invoice", "freelancer invoice", "invoice template", "PDF invoice", "online invoice maker", "invoice creator", "billing tool"],
+  keywords: ["invoice generator", "free invoice", "freelancer invoice", "invoice template", "PDF invoice", "online invoice maker", "invoice creator", "billing tool", "duxbill"],
   metadataBase: new URL("https://get-billflow.vercel.app"),
   openGraph: {
-    title: "BillFlow — Free Invoice Generator for Freelancers",
+    title: "Duxbill — Free Invoice Generator for Freelancers & Small Business",
     description: "Create professional invoices in seconds. Export PDFs, track payments — no signup required.",
     url: "https://get-billflow.vercel.app",
-    siteName: "BillFlow",
+    siteName: "Duxbill",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "BillFlow — Free Invoice Generator",
+    title: "Duxbill — Free Invoice Generator",
     description: "Create professional invoices in seconds. No signup. 100% free.",
     creator: "@BrickBWoodstock",
   },
