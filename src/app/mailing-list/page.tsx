@@ -83,9 +83,9 @@ export default function MailingListPage() {
           <p className="text-zinc-400 max-w-md mx-auto">
             Upgrade to <span className="text-blue-400 font-semibold">Duxbill Pro</span> to automatically build a mailing list from your invoice clients. Export contacts as CSV anytime.
           </p>
-          <button className="rounded-lg bg-blue-600 px-8 py-3 text-sm font-medium text-white hover:bg-blue-500 transition-colors">
-            Upgrade to Pro — Coming Soon
-          </button>
+          <Link href="/pricing" className="inline-block rounded-lg bg-blue-600 px-8 py-3 text-sm font-medium text-white hover:bg-blue-500 transition-colors">
+            Upgrade to Pro
+          </Link>
           <div className="rounded-lg border border-zinc-800 bg-zinc-900/50 p-6 text-left space-y-3 max-w-sm mx-auto">
             <p className="text-sm font-medium text-zinc-300">Pro mailing list includes:</p>
             <ul className="text-sm text-zinc-400 space-y-2">

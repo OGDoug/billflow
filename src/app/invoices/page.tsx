@@ -165,9 +165,9 @@ export default function InvoicesPage() {
             Upgrade to <span className="text-blue-400 font-semibold">Duxbill Pro</span> to save, search, and manage all your invoices. Sort by client, filter by status, and never lose track of a payment.
           </p>
           <div className="flex flex-col items-center gap-3">
-            <button className="rounded-lg bg-blue-600 px-8 py-3 text-sm font-medium text-white hover:bg-blue-500 transition-colors">
-              Upgrade to Pro — Coming Soon
-            </button>
+            <Link href="/pricing" className="rounded-lg bg-blue-600 px-8 py-3 text-sm font-medium text-white hover:bg-blue-500 transition-colors">
+              Upgrade to Pro
+            </Link>
             <Link href="/invoices/new" className="text-sm text-zinc-500 hover:text-zinc-300 transition-colors">
               or create a free invoice →
             </Link>
