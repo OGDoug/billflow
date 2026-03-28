@@ -112,23 +112,23 @@ export default function PricingPage() {
           </p>
 
           {/* Billing Toggle */}
-          <div className="flex items-center justify-center gap-3 mt-8">
+          <div className="inline-flex items-center rounded-full border border-zinc-700 bg-zinc-900 p-1 mt-8">
             <button
               onClick={() => setBilling("monthly")}
-              className={`rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
-                billing === "monthly" ? "bg-zinc-800 text-white" : "text-zinc-500 hover:text-zinc-300"
+              className={`rounded-full px-5 py-2 text-sm font-medium transition-all ${
+                billing === "monthly" ? "bg-blue-600 text-white shadow-sm" : "text-zinc-400 hover:text-white"
               }`}
             >
               Monthly
             </button>
             <button
               onClick={() => setBilling("annual")}
-              className={`rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
-                billing === "annual" ? "bg-zinc-800 text-white" : "text-zinc-500 hover:text-zinc-300"
+              className={`rounded-full px-5 py-2 text-sm font-medium transition-all ${
+                billing === "annual" ? "bg-blue-600 text-white shadow-sm" : "text-zinc-400 hover:text-white"
               }`}
             >
               Annual
-              <span className="ml-1.5 rounded-full bg-green-600/20 px-2 py-0.5 text-xs text-green-400">Save 17%</span>
+              <span className="ml-1.5 rounded-full bg-green-500/20 px-2 py-0.5 text-[10px] font-bold text-green-400 uppercase">Save 17%</span>
             </button>
           </div>
         </div>
