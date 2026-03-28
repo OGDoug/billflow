@@ -31,6 +31,9 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://get-billflow.vercel.app",
   },
+  verification: {
+    google: "t7nGv63QBO2NkVMRzzl6Z2dKwFhVpw73D7ZoyTOKVUk",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
