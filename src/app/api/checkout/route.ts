@@ -6,14 +6,17 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 });
 
 const PRICES: Record<string, string> = {
-  pro: "price_1TFQi9LqrZZEjlA4P8EJvKEv",
-  premium: "price_1TFQiALqrZZEjlA4kGkPpJw5",
+  "pro-monthly": "price_1TG0paLqrZZEjlA4SI9ox83k",
+  "pro-annual": "price_1TG0paLqrZZEjlA4dZsB2VIl",
+  "premium-monthly": "price_1TG0paLqrZZEjlA4YOOHNIZU",
+  "premium-annual": "price_1TG0pbLqrZZEjlA42edteDCz",
 };
 
 export async function POST(req: NextRequest) {
   try {
-    const { plan } = await req.json();
-    const priceId = PRICES[plan];
+    const { plan, billing } = await req.json();
+    const key = `${plan}-${billing || "monthly"}`;
+    const priceId = PRICES[key];
     if (!priceId) {
       return NextResponse.json({ error: "Invalid plan" }, { status: 400 });
     }

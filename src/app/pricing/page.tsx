@@ -3,66 +3,71 @@
 import Link from "next/link";
 import { useState } from "react";
 
-const plans = [
-  {
-    name: "Free",
-    price: "$0",
-    period: "forever",
-    description: "Create unlimited invoices",
-    features: [
-      "Unlimited invoice creation",
-      "PDF export",
-      "Classic invoice style",
-      "Client name, email, phone, address",
-      "Items & services with tax",
-    ],
-    locked: [],
-    cta: "Current Plan",
-    plan: null,
-    highlight: false,
-  },
-  {
-    name: "Pro",
-    price: "$5",
-    period: "/month",
-    description: "For freelancers who want to look professional",
-    features: [
-      "Everything in Free, plus:",
-      "Invoice archive & search",
-      "Sort & filter by client, status, date",
-      "5 invoice styles (Modern, Minimal, Bold, Elegant)",
-      "Company logo on invoices",
-      "Saved client profiles",
-      "Mailing list with CSV export",
-    ],
-    locked: [],
-    cta: "Upgrade to Pro",
-    plan: "pro",
-    highlight: true,
-  },
-  {
-    name: "Premium",
-    price: "$12",
-    period: "/month",
-    description: "For businesses that need to manage A/R",
-    features: [
-      "Everything in Pro, plus:",
-      "A/R dashboard with alerts",
-      "Overdue invoice tracking",
-      "Due-soon warnings (3-day window)",
-      "Mark as paid with notes",
-      "Partial payment tracking",
-      "Outstanding balance summary",
-    ],
-    locked: [],
-    cta: "Upgrade to Premium",
-    plan: "premium",
-    highlight: false,
-  },
-];
-
 export default function PricingPage() {
+  const [billing, setBilling] = useState<"monthly" | "annual">("monthly");
   const [loading, setLoading] = useState<string | null>(null);
+
+  const plans = [
+    {
+      name: "Free",
+      monthly: "$0",
+      annual: "$0",
+      period: "forever",
+      description: "Create unlimited invoices",
+      features: [
+        "Unlimited invoice creation",
+        "PDF export",
+        "Classic invoice style",
+        "Client name, email, phone, address",
+        "Items & services with tax",
+      ],
+      cta: "Current Plan",
+      plan: null,
+      highlight: false,
+    },
+    {
+      name: "Pro",
+      monthly: "$3",
+      annual: "$30",
+      monthlySub: "/month",
+      annualSub: "/year",
+      annualSavings: "Save $6/yr",
+      description: "For freelancers who want to look professional",
+      features: [
+        "Everything in Free, plus:",
+        "Invoice archive & search",
+        "Sort & filter by client, status, date",
+        "5 invoice styles",
+        "Company logo on invoices",
+        "Saved client profiles",
+        "Mailing list with CSV export",
+      ],
+      cta: "Upgrade to Pro",
+      plan: "pro",
+      highlight: true,
+    },
+    {
+      name: "Premium",
+      monthly: "$6",
+      annual: "$60",
+      monthlySub: "/month",
+      annualSub: "/year",
+      annualSavings: "Save $12/yr",
+      description: "For businesses that need to manage A/R",
+      features: [
+        "Everything in Pro, plus:",
+        "A/R dashboard with alerts",
+        "Overdue invoice tracking",
+        "Due-soon warnings (3-day window)",
+        "Mark as paid with notes",
+        "Partial payment tracking",
+        "Outstanding balance summary",
+      ],
+      cta: "Upgrade to Premium",
+      plan: "premium",
+      highlight: false,
+    },
+  ];
 
   const handleUpgrade = async (plan: string) => {
     setLoading(plan);
@@ -70,7 +75,7 @@ export default function PricingPage() {
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan }),
+        body: JSON.stringify({ plan, billing }),
       });
       const data = await res.json();
       if (data.url) {
@@ -105,6 +110,27 @@ export default function PricingPage() {
           <p className="text-zinc-400 max-w-lg mx-auto">
             Free invoicing forever. Upgrade when you need more power.
           </p>
+
+          {/* Billing Toggle */}
+          <div className="flex items-center justify-center gap-3 mt-8">
+            <button
+              onClick={() => setBilling("monthly")}
+              className={`rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
+                billing === "monthly" ? "bg-zinc-800 text-white" : "text-zinc-500 hover:text-zinc-300"
+              }`}
+            >
+              Monthly
+            </button>
+            <button
+              onClick={() => setBilling("annual")}
+              className={`rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
+                billing === "annual" ? "bg-zinc-800 text-white" : "text-zinc-500 hover:text-zinc-300"
+              }`}
+            >
+              Annual
+              <span className="ml-1.5 rounded-full bg-green-600/20 px-2 py-0.5 text-xs text-green-400">Save 17%</span>
+            </button>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -125,9 +151,16 @@ export default function PricingPage() {
               <div>
                 <h2 className="text-xl font-bold">{plan.name}</h2>
                 <div className="flex items-baseline gap-1 mt-2">
-                  <span className="text-4xl font-bold">{plan.price}</span>
-                  <span className="text-zinc-500 text-sm">{plan.period}</span>
+                  <span className="text-4xl font-bold">
+                    {billing === "monthly" ? plan.monthly : plan.annual}
+                  </span>
+                  <span className="text-zinc-500 text-sm">
+                    {plan.plan ? (billing === "monthly" ? plan.monthlySub : plan.annualSub) : plan.period}
+                  </span>
                 </div>
+                {billing === "annual" && plan.annualSavings && (
+                  <span className="inline-block mt-1 text-xs text-green-400">{plan.annualSavings}</span>
+                )}
                 <p className="text-sm text-zinc-400 mt-2">{plan.description}</p>
               </div>
 
