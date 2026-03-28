@@ -56,6 +56,12 @@ export default function Home() {
             Pricing
           </Link>
           <Link
+            href="/login"
+            className="text-sm text-zinc-400 hover:text-white transition-colors"
+          >
+            Sign In
+          </Link>
+          <Link
             href="/invoices/new"
             className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-500 transition-colors"
           >

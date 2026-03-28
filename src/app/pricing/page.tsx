@@ -1,11 +1,23 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { supabase } from "@/lib/supabase";
 
 export default function PricingPage() {
   const [billing, setBilling] = useState<"monthly" | "annual">("monthly");
   const [loading, setLoading] = useState<string | null>(null);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (user) {
+        setUserEmail(user.email || null);
+        setUserId(user.id);
+      }
+    });
+  }, []);
 
   const plans = [
     {
@@ -70,12 +82,17 @@ export default function PricingPage() {
   ];
 
   const handleUpgrade = async (plan: string) => {
+    if (!userId) {
+      // Not logged in — redirect to signup with return URL
+      window.location.href = `/signup?redirect=/pricing&plan=${plan}`;
+      return;
+    }
     setLoading(plan);
     try {
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan, billing }),
+        body: JSON.stringify({ plan, billing, email: userEmail, userId }),
       });
       const data = await res.json();
       if (data.url) {

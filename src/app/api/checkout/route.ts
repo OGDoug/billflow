@@ -14,7 +14,7 @@ const PRICES: Record<string, string> = {
 
 export async function POST(req: NextRequest) {
   try {
-    const { plan, billing } = await req.json();
+    const { plan, billing, email, userId } = await req.json();
     const key = `${plan}-${billing || "monthly"}`;
     const priceId = PRICES[key];
     if (!priceId) {
@@ -23,12 +23,19 @@ export async function POST(req: NextRequest) {
 
     const origin = req.headers.get("origin") || "https://get-billflow.vercel.app";
 
-    const session = await stripe.checkout.sessions.create({
+    const sessionConfig: Stripe.Checkout.SessionCreateParams = {
       mode: "subscription",
       line_items: [{ price: priceId, quantity: 1 }],
       success_url: `${origin}/upgrade/success?plan=${plan}&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/pricing`,
-    });
+      metadata: { userId: userId || "", plan },
+    };
+
+    if (email) {
+      sessionConfig.customer_email = email;
+    }
+
+    const session = await stripe.checkout.sessions.create(sessionConfig);
 
     return NextResponse.json({ url: session.url });
   } catch (err: any) {
