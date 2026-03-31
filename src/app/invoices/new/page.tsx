@@ -6,6 +6,13 @@ import { useState, useEffect } from "react";
 import { InvoiceItem, InvoiceTemplate } from "@/lib/types";
 import { saveInvoice, isPremium, getSavedClients, saveClient, getSettings, saveSettings, addToMailingList, fmt } from "@/lib/db";
 
+function formatPhone(value: string): string {
+  const digits = value.replace(/\D/g, "").slice(0, 10);
+  if (digits.length <= 3) return digits;
+  if (digits.length <= 6) return `${digits.slice(0, 3)}-${digits.slice(3)}`;
+  return `${digits.slice(0, 3)}-${digits.slice(3, 6)}-${digits.slice(6)}`;
+}
+
 export default function NewInvoicePage() {
   const router = useRouter();
   const [invoiceNumber, setInvoiceNumber] = useState("");
@@ -305,8 +312,8 @@ export default function NewInvoicePage() {
               <input
                 type="tel"
                 value={clientPhone}
-                onChange={(e) => setClientPhone(e.target.value)}
-                placeholder="(555) 123-4567"
+                onChange={(e) => setClientPhone(formatPhone(e.target.value))}
+                placeholder="555-555-5555"
                 className={inputClass}
               />
             </div>
