@@ -9,12 +9,15 @@ export default function PricingPage() {
   const [loading, setLoading] = useState<string | null>(null);
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
+  const [currentTier, setCurrentTier] = useState<string>("free");
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data: { user } }) => {
+    supabase.auth.getUser().then(async ({ data: { user } }) => {
       if (user) {
         setUserEmail(user.email || null);
         setUserId(user.id);
+        const { data } = await supabase.from("profiles").select("tier").eq("id", user.id).single();
+        if (data?.tier) setCurrentTier(data.tier);
       }
     });
   }, []);
@@ -33,9 +36,10 @@ export default function PricingPage() {
         "Client name, email, phone, address",
         "Items & services with tax",
       ],
-      cta: "Current Plan",
+      cta: currentTier === "free" ? "Current Plan" : "Downgrade to Free",
       plan: null,
       highlight: false,
+      isCurrent: currentTier === "free",
     },
     {
       name: "Pro",
@@ -54,9 +58,10 @@ export default function PricingPage() {
         "Saved client profiles",
         "Mailing list with CSV export",
       ],
-      cta: "Upgrade to Pro",
+      cta: currentTier === "pro" ? "Current Plan" : "Upgrade to Pro",
       plan: "pro",
       highlight: true,
+      isCurrent: currentTier === "pro",
     },
     {
       name: "Premium",
@@ -75,9 +80,10 @@ export default function PricingPage() {
         "Partial payment tracking",
         "Outstanding balance summary",
       ],
-      cta: "Upgrade to Premium",
+      cta: currentTier === "premium" ? "Current Plan" : "Upgrade to Premium",
       plan: "premium",
       highlight: false,
+      isCurrent: currentTier === "premium",
     },
   ];
 
@@ -190,7 +196,7 @@ export default function PricingPage() {
                 ))}
               </ul>
 
-              {plan.plan ? (
+              {plan.plan && !plan.isCurrent ? (
                 <button
                   onClick={() => handleUpgrade(plan.plan!)}
                   disabled={loading === plan.plan}
@@ -202,6 +208,10 @@ export default function PricingPage() {
                 >
                   {loading === plan.plan ? "Redirecting..." : plan.cta}
                 </button>
+              ) : plan.isCurrent ? (
+                <div className="w-full rounded-lg border-2 border-green-500/50 bg-green-500/10 px-4 py-3 text-sm font-medium text-green-400 text-center">
+                  ✓ Current Plan
+                </div>
               ) : (
                 <Link
                   href="/invoices/new"

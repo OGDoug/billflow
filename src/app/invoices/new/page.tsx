@@ -38,7 +38,19 @@ export default function NewInvoicePage() {
   useEffect(() => {
     setPremium(isPremium());
     setSavedClients(getSavedClients());
-    setLogo(getSettings().logo);
+    const settings = getSettings();
+    setLogo(settings.logo);
+    // Restore sender info from last session
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("duxbill_sender");
+      if (saved) {
+        try {
+          const s = JSON.parse(saved);
+          if (s.name) setSenderName(s.name);
+          if (s.address) setSenderAddress(s.address);
+        } catch {}
+      }
+    }
   }, []);
 
   const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -110,6 +122,10 @@ export default function NewInvoicePage() {
       tax,
       total,
     };
+    // Save sender info for next time
+    if (senderName || senderAddress) {
+      localStorage.setItem("duxbill_sender", JSON.stringify({ name: senderName, address: senderAddress }));
+    }
     // Always save (needed for the detail/PDF page), but free users get cleared after download
     saveInvoice(invoice);
     // Premium: auto-save client for reuse + add to mailing list
@@ -135,8 +151,8 @@ export default function NewInvoicePage() {
           <span className="flex items-center gap-0.5"><img src="/duxbill-nav.png?v=2" alt="" className="h-6 w-auto" /><span><span className="text-white">Dux</span>
           <span className="text-blue-500">bill</span></span></span>
         </Link>
-        <Link href="/invoices" className="text-sm text-zinc-400 hover:text-white transition-colors">
-          ← Back to Invoices
+        <Link href={premium ? "/invoices" : "/"} className="text-sm text-zinc-400 hover:text-white transition-colors">
+          ← {premium ? "Back to Invoices" : "Back to Home"}
         </Link>
       </nav>
 
@@ -382,50 +398,54 @@ export default function NewInvoicePage() {
             </div>
             <div className="space-y-3">
               {items.map((item, idx) => (
-                <div key={item.id} className="grid grid-cols-12 gap-2 items-start">
-                  <select
-                    value={item.kind}
-                    onChange={(e) => updateItem(item.id, "kind", e.target.value)}
-                    className={`${inputClass} col-span-2`}
-                  >
-                    <option value="item">Item</option>
-                    <option value="service">Service</option>
-                  </select>
-                  <input
-                    required
-                    placeholder="Description"
-                    value={item.description}
-                    onChange={(e) => updateItem(item.id, "description", e.target.value)}
-                    className={`${inputClass} ${item.kind === "service" ? "col-span-6" : "col-span-4"}`}
-                  />
-                  {item.kind === "item" && (
+                <div key={item.id} className="rounded-lg border border-zinc-800 bg-zinc-900/30 p-3 space-y-2 sm:space-y-0 sm:grid sm:grid-cols-12 sm:gap-2 sm:items-start sm:border-0 sm:bg-transparent sm:p-0 sm:rounded-none">
+                  <div className="flex gap-2 sm:contents">
+                    <select
+                      value={item.kind}
+                      onChange={(e) => updateItem(item.id, "kind", e.target.value)}
+                      className={`${inputClass} w-28 sm:w-auto sm:col-span-2`}
+                    >
+                      <option value="item">Item</option>
+                      <option value="service">Service</option>
+                    </select>
+                    <input
+                      required
+                      placeholder="Description"
+                      value={item.description}
+                      onChange={(e) => updateItem(item.id, "description", e.target.value)}
+                      className={`${inputClass} flex-1 sm:${item.kind === "service" ? "col-span-6" : "col-span-4"}`}
+                    />
+                  </div>
+                  <div className="flex gap-2 sm:contents">
+                    {item.kind === "item" && (
+                      <input
+                        required
+                        type="number"
+                        min="1"
+                        placeholder="Qty"
+                        value={item.quantity}
+                        onChange={(e) => updateItem(item.id, "quantity", parseInt(e.target.value) || 0)}
+                        className={`${inputClass} w-20 sm:w-auto sm:col-span-2`}
+                      />
+                    )}
                     <input
                       required
                       type="number"
-                      min="1"
-                      placeholder="Qty"
-                      value={item.quantity}
-                      onChange={(e) => updateItem(item.id, "quantity", parseInt(e.target.value) || 0)}
-                      className={`${inputClass} col-span-2`}
+                      min="0"
+                      step="0.01"
+                      placeholder="Rate"
+                      value={item.rate || ""}
+                      onChange={(e) => updateItem(item.id, "rate", parseFloat(e.target.value) || 0)}
+                      className={`${inputClass} flex-1 sm:col-span-3`}
                     />
-                  )}
-                  <input
-                    required
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    placeholder="Rate"
-                    value={item.rate || ""}
-                    onChange={(e) => updateItem(item.id, "rate", parseFloat(e.target.value) || 0)}
-                    className={`${inputClass} col-span-3`}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => removeItem(item.id)}
-                    className="col-span-1 rounded-lg border border-zinc-700 bg-zinc-900 px-2 py-2 text-sm text-red-400 hover:bg-zinc-800 transition-colors"
-                  >
-                    ×
-                  </button>
+                    <button
+                      type="button"
+                      onClick={() => removeItem(item.id)}
+                      className="rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-red-400 hover:bg-zinc-800 transition-colors sm:col-span-1 sm:px-2"
+                    >
+                      ×
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>

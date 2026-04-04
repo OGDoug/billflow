@@ -212,6 +212,12 @@ export default function InvoiceDetailPage() {
           <span className="text-blue-500">bill</span></span></span>
         </Link>
         <div className="flex items-center gap-3">
+          <Link
+            href="/invoices/new"
+            className="rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-500 transition-colors"
+          >
+            Create Another
+          </Link>
           <button
             onClick={downloadPDF}
             className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-500 transition-colors"
@@ -219,7 +225,7 @@ export default function InvoiceDetailPage() {
             Download PDF
           </button>
           <Link
-            href="/invoices"
+            href={premium ? "/invoices" : "/"}
             className="text-sm text-zinc-400 hover:text-white transition-colors"
           >
             ← Back

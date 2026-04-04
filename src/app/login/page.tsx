@@ -1,16 +1,25 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const errorParam = searchParams.get("error");
+    if (errorParam) {
+      setError(decodeURIComponent(errorParam));
+    }
+  }, [searchParams]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -74,9 +83,24 @@ export default function LoginPage() {
 
           {error && <p className="text-sm text-red-400">{error}</p>}
 
-          <button type="submit" disabled={loading} className="w-full rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-blue-500 disabled:opacity-50 transition-colors">
-            {loading ? "Signing in..." : "Sign in"}
-          </button>
+          <div className="flex items-center justify-between">
+            <button type="submit" disabled={loading} className="rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-blue-500 disabled:opacity-50 transition-colors">
+              {loading ? "Signing in..." : "Sign in"}
+            </button>
+            <button
+              type="button"
+              onClick={async () => {
+                if (!email) { setError("Enter your email first"); return; }
+                setError("");
+                const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${window.location.origin}/auth/callback` });
+                if (error) setError(error.message);
+                else setError("Check your email for a password reset link.");
+              }}
+              className="text-xs text-zinc-500 hover:text-zinc-300 transition-colors"
+            >
+              Forgot password?
+            </button>
+          </div>
         </form>
 
         <p className="text-center text-sm text-zinc-500">
