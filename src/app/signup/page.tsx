@@ -54,7 +54,20 @@ function SignupForm() {
           <div className="text-4xl">📧</div>
           <h1 className="text-2xl font-bold">Check your email</h1>
           <p className="text-zinc-400">We sent a confirmation link to <span className="text-white font-medium">{email}</span>. Click it to activate your account.</p>
-          <Link href="/login" className="inline-block text-sm text-blue-400 hover:text-blue-300">← Back to login</Link>
+          <div className="flex flex-col gap-2">
+            <button
+              onClick={async () => {
+                setError("");
+                const { error } = await supabase.auth.resend({ type: "signup", email });
+                if (error) setError(error.message);
+                else setError("New confirmation email sent!");
+              }}
+              className="text-xs text-zinc-500 hover:text-zinc-300 transition-colors"
+            >
+              Resend confirmation email
+            </button>
+            <Link href="/login" className="inline-block text-sm text-blue-400 hover:text-blue-300">← Back to login</Link>
+          </div>
         </div>
       </div>
     );
