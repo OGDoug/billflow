@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { InvoiceItem, InvoiceTemplate } from "@/lib/types";
 import { saveInvoice, isPremium, getSavedClients, saveClient, getSettings, saveSettings, addToMailingList, fmt } from "@/lib/db";
+import NavBar from "../../NavBar";
 
 function formatPhone(value: string): string {
   const digits = value.replace(/\D/g, "").slice(0, 10);
@@ -146,15 +147,7 @@ export default function NewInvoicePage() {
 
   return (
     <div className="min-h-screen">
-      <nav className="border-b border-zinc-800 px-6 py-4 flex items-center justify-between">
-        <Link href="/" className="text-xl font-bold tracking-tight">
-          <span className="flex items-center gap-0.5"><img src="/duxbill-nav.png?v=2" alt="" className="h-6 w-auto" /><span><span className="text-white">Dux</span>
-          <span className="text-blue-500">bill</span></span></span>
-        </Link>
-        <Link href={premium ? "/invoices" : "/"} className="text-sm text-zinc-400 hover:text-white transition-colors">
-          ← {premium ? "Back to Invoices" : "Back to Home"}
-        </Link>
-      </nav>
+      <NavBar variant="simple" />
 
       <main className="max-w-3xl mx-auto px-6 py-10">
         <h1 className="text-2xl font-bold mb-8">Create Invoice</h1>

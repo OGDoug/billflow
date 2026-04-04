@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { MailingListEntry } from "@/lib/types";
 import { isPremium, getMailingList, removeFromMailingList, addManualToMailingList } from "@/lib/db";
+import NavBar from "../NavBar";
 
 export default function MailingListPage() {
   const [premium, setPremium] = useState(false);
@@ -68,15 +69,7 @@ export default function MailingListPage() {
   if (!loading && !premium) {
     return (
       <div className="min-h-screen">
-        <nav className="border-b border-zinc-800 px-6 py-4 flex items-center justify-between">
-          <Link href="/" className="text-xl font-bold tracking-tight">
-            <span className="flex items-center gap-0.5"><img src="/duxbill-nav.png?v=2" alt="" className="h-6 w-auto" /><span><span className="text-white">Dux</span>
-            <span className="text-blue-500">bill</span></span></span>
-          </Link>
-          <Link href="/invoices/new" className="text-sm text-zinc-400 hover:text-white transition-colors">
-            ← Create Invoice
-          </Link>
-        </nav>
+        <NavBar />
         <main className="max-w-2xl mx-auto px-6 py-20 text-center space-y-6">
           <div className="text-5xl">📧</div>
           <h1 className="text-2xl font-bold">Mailing List</h1>
@@ -103,20 +96,7 @@ export default function MailingListPage() {
 
   return (
     <div className="min-h-screen">
-      <nav className="border-b border-zinc-800 px-6 py-4 flex items-center justify-between">
-        <Link href="/" className="text-xl font-bold tracking-tight">
-          <span className="flex items-center gap-0.5"><img src="/duxbill-nav.png?v=2" alt="" className="h-6 w-auto" /><span><span className="text-white">Dux</span>
-          <span className="text-blue-500">bill</span></span></span>
-        </Link>
-        <div className="flex items-center gap-3">
-          <Link href="/invoices" className="text-sm text-zinc-400 hover:text-white transition-colors">
-            Invoices
-          </Link>
-          <Link href="/invoices/new" className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-500 transition-colors">
-            + New Invoice
-          </Link>
-        </div>
-      </nav>
+      <NavBar />
 
       <main className="max-w-4xl mx-auto px-6 py-10">
         <div className="flex items-center justify-between mb-6">

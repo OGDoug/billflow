@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
+import NavBar from "../NavBar";
 
 export default function PricingPage() {
   const [billing, setBilling] = useState<"monthly" | "annual">("monthly");
@@ -114,17 +115,7 @@ export default function PricingPage() {
 
   return (
     <div className="min-h-screen">
-      <nav className="border-b border-zinc-800/50 px-6 py-4 flex items-center justify-between">
-        <Link href="/" className="text-xl font-bold tracking-tight">
-          <span className="flex items-center gap-0.5">
-            <img src="/duxbill-nav.png?v=2" alt="" className="h-6 w-auto" />
-            <span><span className="text-white">Dux</span><span className="text-blue-500">bill</span></span>
-          </span>
-        </Link>
-        <Link href="/invoices/new" className="text-sm text-zinc-400 hover:text-white transition-colors">
-          ← Back to invoicing
-        </Link>
-      </nav>
+      <NavBar variant="simple" />
 
       <main className="max-w-5xl mx-auto px-6 py-16">
         <div className="text-center mb-12">

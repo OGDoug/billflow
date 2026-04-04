@@ -6,6 +6,7 @@ import { useParams } from "next/navigation";
 import { Invoice } from "@/lib/types";
 import { getInvoice, deleteInvoice, isPremium, fmt } from "@/lib/db";
 import { getTemplate } from "@/lib/templates";
+import NavBar from "../../NavBar";
 
 export default function InvoiceDetailPage() {
   const params = useParams();

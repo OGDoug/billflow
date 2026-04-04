@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Invoice } from "@/lib/types";
 import { getInvoices, updateInvoiceStatus, deleteInvoice as removeInvoice, isPremium, isPremiumTier, updateInvoice, getSettings, fmt } from "@/lib/db";
+import NavBar from "../NavBar";
 
 const statusColors: Record<string, string> = {
   draft: "bg-zinc-700 text-zinc-300",
@@ -145,18 +146,7 @@ export default function InvoicesPage() {
   if (!loading && !premium) {
     return (
       <div className="min-h-screen">
-        <nav className="border-b border-zinc-800 px-6 py-4 flex items-center justify-between">
-          <Link href="/" className="text-xl font-bold tracking-tight">
-            <span className="flex items-center gap-0.5"><img src="/duxbill-nav.png?v=2" alt="" className="h-6 w-auto" /><span><span className="text-white">Dux</span>
-            <span className="text-blue-500">bill</span></span></span>
-          </Link>
-          <Link
-            href="/invoices/new"
-            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-500 transition-colors"
-          >
-            + New Invoice
-          </Link>
-        </nav>
+        <NavBar />
 
         <main className="max-w-2xl mx-auto px-6 py-20 text-center space-y-6">
           <div className="text-5xl">📋</div>
@@ -190,18 +180,7 @@ export default function InvoicesPage() {
 
   return (
     <div className="min-h-screen">
-      <nav className="border-b border-zinc-800 px-6 py-4 flex items-center justify-between">
-        <Link href="/" className="text-xl font-bold tracking-tight">
-          <span className="flex items-center gap-0.5"><img src="/duxbill-nav.png?v=2" alt="" className="h-6 w-auto" /><span><span className="text-white">Dux</span>
-          <span className="text-blue-500">bill</span></span></span>
-        </Link>
-        <Link
-          href="/invoices/new"
-          className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-500 transition-colors"
-        >
-          + New Invoice
-        </Link>
-      </nav>
+      <NavBar />
 
       <main className="max-w-4xl mx-auto px-6 py-10">
         <div className="flex items-center justify-between mb-6">
