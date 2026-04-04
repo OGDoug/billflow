@@ -25,7 +25,9 @@ export default function NavBar({ variant = "full" }: { variant?: "full" | "simpl
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
-    saveSettings({ tier: "free" });
+    // Note: Don't reset tier to "free" on sign out
+    // The user's subscription is still active, they're just not authenticated
+    // AuthSync will handle tier reset only if their subscription actually ends
     window.location.href = "/";
   };
 

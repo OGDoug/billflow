@@ -32,7 +32,9 @@ export default function AuthSync() {
         const tier = (data?.tier as UserTier) || "free";
         saveSettings({ tier });
       } else if (event === "SIGNED_OUT") {
-        saveSettings({ tier: "free" });
+        // Don't reset tier on sign out - user may still have active subscription
+        // Tier should only be reset when subscription actually ends (via webhook)
+        // Keep current tier in localStorage so they can access Pro features after re-login
       }
     });
 
