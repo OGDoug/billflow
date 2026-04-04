@@ -98,20 +98,25 @@ export default function NavBar({ variant = "full" }: { variant?: "full" | "simpl
       </nav>
       {/* Mobile menu dropdown */}
       {menuOpen && (
-        <div className="sm:hidden border-b border-zinc-800 bg-zinc-950 px-6 py-3 flex flex-col gap-3 sticky top-[57px] z-40">
+        <div className="sm:hidden fixed top-[73px] left-0 right-0 border-b border-zinc-800 bg-zinc-950 px-6 py-4 flex flex-col gap-3 z-50 shadow-lg">
           {!loading && user ? (
             <>
-              <Link href="/invoices" className="text-sm text-zinc-400 hover:text-white transition-colors" onClick={() => setMenuOpen(false)}>Dashboard</Link>
-              <Link href="/invoices/new" className="text-sm text-zinc-400 hover:text-white transition-colors" onClick={() => setMenuOpen(false)}>New Invoice</Link>
-              <Link href="/pricing" className="text-sm text-zinc-400 hover:text-white transition-colors" onClick={() => setMenuOpen(false)}>Pricing</Link>
-              <button onClick={handleSignOut} className="text-sm text-left text-zinc-400 hover:text-white transition-colors">Sign Out</button>
-              <span className="text-xs text-zinc-600 truncate">{user.email}</span>
+              <span className="text-xs text-zinc-500 mb-2">Signed in as: {user.email}</span>
+              <Link href="/invoices" className="text-sm text-zinc-300 hover:text-white transition-colors py-2 border-b border-zinc-800" onClick={() => setMenuOpen(false)}>📊 Dashboard</Link>
+              <Link href="/invoices/new" className="text-sm text-zinc-300 hover:text-white transition-colors py-2 border-b border-zinc-800" onClick={() => setMenuOpen(false)}>➕ New Invoice</Link>
+              <Link href="/pricing" className="text-sm text-zinc-300 hover:text-white transition-colors py-2 border-b border-zinc-800" onClick={() => setMenuOpen(false)}>💎 Pricing</Link>
+              <button 
+                onClick={() => { handleSignOut(); setMenuOpen(false); }} 
+                className="text-sm text-left text-red-400 hover:text-red-300 transition-colors py-3 font-medium bg-red-950/30 rounded border border-red-800/50"
+              >
+                🚪 Sign Out
+              </button>
             </>
           ) : (
             <>
-              <Link href="/pricing" className="text-sm text-zinc-400 hover:text-white transition-colors" onClick={() => setMenuOpen(false)}>Pricing</Link>
-              <Link href="/login" className="text-sm text-zinc-400 hover:text-white transition-colors" onClick={() => setMenuOpen(false)}>Sign In</Link>
-              <Link href="/signup" className="text-sm text-blue-400 hover:text-blue-300 transition-colors" onClick={() => setMenuOpen(false)}>Create Account</Link>
+              <Link href="/pricing" className="text-sm text-zinc-400 hover:text-white transition-colors py-2" onClick={() => setMenuOpen(false)}>💎 Pricing</Link>
+              <Link href="/login" className="text-sm text-zinc-400 hover:text-white transition-colors py-2" onClick={() => setMenuOpen(false)}>🔑 Sign In</Link>
+              <Link href="/signup" className="text-sm text-blue-400 hover:text-blue-300 transition-colors py-2" onClick={() => setMenuOpen(false)}>✨ Create Account</Link>
             </>
           )}
         </div>
