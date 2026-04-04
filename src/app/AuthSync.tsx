@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { saveSettings } from "@/lib/db";
+import { migrateToCloudStorage, syncFromCloud } from "@/lib/db";
 import type { UserTier } from "@/lib/types";
 
 export default function AuthSync() {
@@ -17,6 +18,12 @@ export default function AuthSync() {
           .single();
         const tier = (data?.tier as UserTier) || "free";
         saveSettings({ tier });
+        
+        // If user is Pro/Premium, migrate and sync data on initial load
+        if (tier === 'pro' || tier === 'premium') {
+          await migrateToCloudStorage();
+          await syncFromCloud();
+        }
       }
     };
 
@@ -30,7 +37,18 @@ export default function AuthSync() {
           .eq("id", session.user.id)
           .single();
         const tier = (data?.tier as UserTier) || "free";
-        saveSettings({ tier });
+        const currentSettings = saveSettings({ tier });
+        
+        // If user upgraded to Pro/Premium, migrate their localStorage data to cloud
+        if ((tier === 'pro' || tier === 'premium') && currentSettings.tier !== tier) {
+          console.log('User upgraded to', tier, '- starting migration...');
+          await migrateToCloudStorage();
+        }
+        
+        // If user is Pro/Premium, sync settings from cloud
+        if (tier === 'pro' || tier === 'premium') {
+          await syncFromCloud();
+        }
       } else if (event === "SIGNED_OUT") {
         // Don't reset tier on sign out - user may still have active subscription
         // Tier should only be reset when subscription actually ends (via webhook)

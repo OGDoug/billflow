@@ -15,10 +15,20 @@ export default function InvoiceDetailPage() {
   const [premium, setPremium] = useState(false);
 
   useEffect(() => {
-    const inv = getInvoice(params.id as string);
-    setInvoice(inv || null);
-    setPremium(isPremium());
-    setLoading(false);
+    const loadInvoice = async () => {
+      try {
+        const inv = await getInvoice(params.id as string);
+        setInvoice(inv || null);
+        setPremium(isPremium());
+        setLoading(false);
+      } catch (error) {
+        console.error('Error loading invoice:', error);
+        setInvoice(null);
+        setLoading(false);
+      }
+    };
+    
+    loadInvoice();
   }, [params.id]);
 
   const downloadPDF = async () => {

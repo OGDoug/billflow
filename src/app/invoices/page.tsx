@@ -30,40 +30,61 @@ export default function InvoicesPage() {
   const [payNote, setPayNote] = useState("");
   const [payAmount, setPayAmount] = useState("");
 
-  const fetchInvoices = () => {
-    setPremium(isPremium());
-    setPremiumTier(isPremiumTier());
-    setInvoices(getInvoices());
-    setLoading(false);
+  const fetchInvoices = async () => {
+    try {
+      setPremium(isPremium());
+      setPremiumTier(isPremiumTier());
+      const invoicesList = await getInvoices();
+      setInvoices(invoicesList);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching invoices:', error);
+      setLoading(false);
+    }
   };
 
   useEffect(() => { fetchInvoices(); }, []);
 
-  const updateStatus = (id: string, status: string) => {
-    updateInvoiceStatus(id, status as Invoice["status"]);
-    fetchInvoices();
+  const updateStatus = async (id: string, status: string) => {
+    try {
+      await updateInvoiceStatus(id, status as Invoice["status"]);
+      await fetchInvoices();
+    } catch (error) {
+      console.error('Error updating status:', error);
+      alert('Error updating invoice status');
+    }
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (!confirm("Delete this invoice?")) return;
-    removeInvoice(id);
-    fetchInvoices();
+    try {
+      await removeInvoice(id);
+      await fetchInvoices();
+    } catch (error) {
+      console.error('Error deleting invoice:', error);
+      alert('Error deleting invoice');
+    }
   };
 
-  const handleMarkPaid = (id: string) => {
-    const amt = payAmount ? parseFloat(payAmount) : undefined;
-    const inv = invoices.find((i) => i.id === id);
-    const isPartial = amt !== undefined && inv && amt < inv.total;
-    updateInvoice(id, {
-      status: isPartial ? "partial" : "paid",
-      paidAt: new Date().toISOString(),
-      paidNote: payNote || undefined,
-      paidAmount: amt,
-    });
-    setPayModal(null);
-    setPayNote("");
-    setPayAmount("");
-    fetchInvoices();
+  const handleMarkPaid = async (id: string) => {
+    try {
+      const amt = payAmount ? parseFloat(payAmount) : undefined;
+      const inv = invoices.find((i) => i.id === id);
+      const isPartial = amt !== undefined && inv && amt < inv.total;
+      await updateInvoice(id, {
+        status: isPartial ? "partial" : "paid",
+        paidAt: new Date().toISOString(),
+        paidNote: payNote || undefined,
+        paidAmount: amt,
+      });
+      setPayModal(null);
+      setPayNote("");
+      setPayAmount("");
+      await fetchInvoices();
+    } catch (error) {
+      console.error('Error marking invoice as paid:', error);
+      alert('Error updating payment status');
+    }
   };
 
   // A/R helpers

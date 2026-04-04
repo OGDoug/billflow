@@ -37,10 +37,15 @@ export default function NewInvoicePage() {
   const [template, setTemplate] = useState<InvoiceTemplate>("classic");
 
   useEffect(() => {
-    setPremium(isPremium());
-    setSavedClients(getSavedClients());
-    const settings = getSettings();
-    setLogo(settings.logo);
+    const loadData = async () => {
+      setPremium(isPremium());
+      const clients = await getSavedClients();
+      setSavedClients(clients);
+      const settings = getSettings();
+      setLogo(settings.logo);
+    };
+    
+    loadData();
     // Restore sender info from last session
     if (typeof window !== "undefined") {
       const saved = localStorage.getItem("duxbill_sender");
@@ -96,50 +101,61 @@ export default function NewInvoicePage() {
   const tax = taxableAmount * (taxRate / 100);
   const total = subtotal + tax;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
-    const id = crypto.randomUUID();
-    const finalInvoiceNumber = invoiceNumber.trim() || `INV-${Date.now().toString(36).toUpperCase()}`;
-    const invoice = {
-      id,
-      invoiceNumber: finalInvoiceNumber,
-      senderName,
-      senderAddress,
-      logo: premium ? logo : undefined,
-      template: premium ? template : "classic",
-      clientName,
-      clientEmail,
-      clientPhone,
-      clientAddress,
-      items,
-      taxRate,
-      servicesTaxable,
-      notes,
-      dueDate,
-      status: "draft" as const,
-      createdAt: new Date().toISOString(),
-      subtotal,
-      tax,
-      total,
-    };
-    // Save sender info for next time
-    if (senderName || senderAddress) {
-      localStorage.setItem("duxbill_sender", JSON.stringify({ name: senderName, address: senderAddress }));
-    }
-    // Always save (needed for the detail/PDF page), but free users get cleared after download
-    saveInvoice(invoice);
-    // Premium: auto-save client for reuse + add to mailing list
-    if (premium && clientName) {
-      const existingClient = savedClients.find((c) => c.name === clientName);
-      if (!existingClient) {
-        saveClient({ id: crypto.randomUUID(), name: clientName, email: clientEmail, phone: clientPhone, address: clientAddress });
+    
+    try {
+      const id = crypto.randomUUID();
+      const finalInvoiceNumber = invoiceNumber.trim() || `INV-${Date.now().toString(36).toUpperCase()}`;
+      const invoice = {
+        id,
+        invoiceNumber: finalInvoiceNumber,
+        senderName,
+        senderAddress,
+        logo: premium ? logo : undefined,
+        template: premium ? template : "classic",
+        clientName,
+        clientEmail,
+        clientPhone,
+        clientAddress,
+        items,
+        taxRate,
+        servicesTaxable,
+        notes,
+        dueDate,
+        status: "draft" as const,
+        createdAt: new Date().toISOString(),
+        subtotal,
+        tax,
+        total,
+      };
+      
+      // Save sender info for next time
+      if (senderName || senderAddress) {
+        localStorage.setItem("duxbill_sender", JSON.stringify({ name: senderName, address: senderAddress }));
       }
-      if (clientEmail) {
-        addToMailingList({ email: clientEmail, name: clientName, phone: clientPhone, addedAt: new Date().toISOString() });
+      
+      // Save invoice (cloud for Pro, localStorage for free)
+      await saveInvoice(invoice);
+      
+      // Premium: auto-save client for reuse + add to mailing list
+      if (premium && clientName) {
+        const existingClient = savedClients.find((c) => c.name === clientName);
+        if (!existingClient) {
+          await saveClient({ id: crypto.randomUUID(), name: clientName, email: clientEmail, phone: clientPhone, address: clientAddress });
+        }
+        if (clientEmail) {
+          await addToMailingList({ email: clientEmail, name: clientName, phone: clientPhone, addedAt: new Date().toISOString() });
+        }
       }
+      
+      router.push(`/invoices/${id}`);
+    } catch (error) {
+      console.error('Error creating invoice:', error);
+      alert('Error creating invoice. Please try again.');
+      setSubmitting(false);
     }
-    router.push(`/invoices/${id}`);
   };
 
   const inputClass =

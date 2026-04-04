@@ -15,28 +15,44 @@ export default function MailingListPage() {
   const [newName, setNewName] = useState("");
   const [showAdd, setShowAdd] = useState(false);
 
-  const refresh = () => {
-    setPremium(isPremium());
-    setEntries(getMailingList());
-    setLoading(false);
+  const refresh = async () => {
+    try {
+      setPremium(isPremium());
+      const list = await getMailingList();
+      setEntries(list);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error loading mailing list:', error);
+      setLoading(false);
+    }
   };
 
   useEffect(() => { refresh(); }, []);
 
-  const handleRemove = (email: string) => {
+  const handleRemove = async (email: string) => {
     if (!confirm(`Remove ${email} from mailing list?`)) return;
-    removeFromMailingList(email);
-    refresh();
+    try {
+      await removeFromMailingList(email);
+      await refresh();
+    } catch (error) {
+      console.error('Error removing from mailing list:', error);
+      alert('Error removing from mailing list');
+    }
   };
 
-  const handleAdd = (e: React.FormEvent) => {
+  const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newEmail.trim()) return;
-    addManualToMailingList(newEmail.trim(), newName.trim());
-    setNewEmail("");
-    setNewName("");
-    setShowAdd(false);
-    refresh();
+    try {
+      await addManualToMailingList(newEmail.trim(), newName.trim());
+      setNewEmail("");
+      setNewName("");
+      setShowAdd(false);
+      await refresh();
+    } catch (error) {
+      console.error('Error adding to mailing list:', error);
+      alert('Error adding to mailing list');
+    }
   };
 
   const exportCSV = () => {
