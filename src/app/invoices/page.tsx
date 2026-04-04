@@ -158,9 +158,14 @@ export default function InvoicesPage() {
             <Link href="/pricing" className="rounded-lg bg-blue-600 px-8 py-3 text-sm font-medium text-white hover:bg-blue-500 transition-colors">
               Upgrade to Pro
             </Link>
-            <Link href="/invoices/new" className="text-sm text-zinc-500 hover:text-zinc-300 transition-colors">
-              or create a free invoice →
-            </Link>
+            <div className="flex flex-col items-center gap-2">
+              <Link href="/login" className="text-sm text-blue-400 hover:text-blue-300 transition-colors">
+                or Sign In →
+              </Link>
+              <Link href="/invoices/new" className="text-sm text-zinc-500 hover:text-zinc-300 transition-colors">
+                or create a free invoice →
+              </Link>
+            </div>
           </div>
           <div className="rounded-lg border border-zinc-800 bg-zinc-900/50 p-6 text-left space-y-3 max-w-sm mx-auto">
             <p className="text-sm font-medium text-zinc-300">Pro includes:</p>
