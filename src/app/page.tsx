@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import NavBar from "./NavBar";
 
@@ -45,7 +46,7 @@ export default function Home() {
       {/* Hero */}
       <main className="flex-1 flex items-center justify-center px-6 py-24 sm:py-32">
         <div className="max-w-3xl text-center space-y-8">
-          <img src="/duxbill-nav.png?v=2" alt="Duxbill" className="h-20 sm:h-28 w-auto mx-auto opacity-80" />
+          <Image src="/duxbill-nav.png?v=2" alt="Duxbill" width={560} height={160} className="h-20 sm:h-28 w-auto mx-auto opacity-80" priority />
           <div className="inline-flex items-center rounded-full border border-blue-500/20 bg-blue-500/10 px-4 py-1.5 text-xs text-blue-400 font-medium">
             ✨ 100% Free — No signup required
           </div>
@@ -109,7 +110,7 @@ export default function Home() {
       {/* CTA */}
       <section className="px-6 py-24">
         <div className="max-w-2xl mx-auto text-center space-y-6">
-          <img src="/duxbill-nav.png?v=2" alt="" className="h-16 w-auto mx-auto opacity-40" />
+          <Image src="/duxbill-nav.png?v=2" alt="Duxbill" width={448} height={128} className="h-16 w-auto mx-auto opacity-40" />
           <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">
             Ready to get paid faster?
           </h2>
@@ -136,7 +137,7 @@ export default function Home() {
           </p>
           <div className="grid sm:grid-cols-2 gap-6">
             <a
-              href="https://free-qr-gen.vercel.app"
+              href="https://qrcode.tools.woodstockaie.com"
               className="rounded-xl border border-zinc-800/50 bg-zinc-900/80 p-6 space-y-2 hover:border-emerald-500/50 transition-colors group"
             >
               <span className="text-2xl">📱</span>
@@ -165,7 +166,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="border-t border-zinc-800/50 px-6 py-8 text-center text-xs text-zinc-500">
-        <img src="/duxbill-nav.png?v=2" alt="Duxbill" className="h-8 w-auto mx-auto mb-3 opacity-30" />
+        <Image src="/duxbill-nav.png?v=2" alt="Duxbill" width={224} height={64} className="h-8 w-auto mx-auto mb-3 opacity-30" />
         <p>Duxbill — Built for freelancers who value their time.</p>
         <p className="mt-2 text-zinc-600">
           Your invoices, your data. Always private.

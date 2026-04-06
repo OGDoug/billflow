@@ -1,27 +1,28 @@
 import { MetadataRoute } from "next";
+import { SITE_URL } from "@/lib/stripe";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
-      url: "https://get-billflow.vercel.app",
+      url: SITE_URL,
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 1,
     },
     {
-      url: "https://get-billflow.vercel.app/invoices",
+      url: `${SITE_URL}/invoices`,
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 0.8,
     },
     {
-      url: "https://get-billflow.vercel.app/invoices/new",
+      url: `${SITE_URL}/invoices/new`,
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.9,
     },
     {
-      url: "https://get-billflow.vercel.app/mailing-list",
+      url: `${SITE_URL}/mailing-list`,
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.6,
