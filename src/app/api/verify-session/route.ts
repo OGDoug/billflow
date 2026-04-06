@@ -6,8 +6,10 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 });
 
 const PRICE_TO_PLAN: Record<string, string> = {
-  price_1TFQi9LqrZZEjlA4P8EJvKEv: "pro",
-  price_1TFQiALqrZZEjlA4kGkPpJw5: "premium",
+  price_1TG0paLqrZZEjlA4SI9ox83k: "pro",
+  price_1TG0paLqrZZEjlA4dZsB2VIl: "pro",
+  price_1TG0paLqrZZEjlA4YOOHNIZU: "premium",
+  price_1TG0pbLqrZZEjlA42edteDCz: "premium",
 };
 
 export async function GET(req: NextRequest) {
