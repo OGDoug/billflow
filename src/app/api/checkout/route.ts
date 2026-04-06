@@ -1,27 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
+import { getPriceId, SITE_URL } from "@/lib/stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2026-03-25.dahlia",
 });
 
-const PRICES: Record<string, string> = {
-  "pro-monthly": "price_1TG0paLqrZZEjlA4SI9ox83k",
-  "pro-annual": "price_1TG0paLqrZZEjlA4dZsB2VIl",
-  "premium-monthly": "price_1TG0paLqrZZEjlA4YOOHNIZU",
-  "premium-annual": "price_1TG0pbLqrZZEjlA42edteDCz",
-};
-
 export async function POST(req: NextRequest) {
   try {
     const { plan, billing, email, userId } = await req.json();
-    const key = `${plan}-${billing || "monthly"}`;
-    const priceId = PRICES[key];
+    const priceId = getPriceId(plan, billing || "monthly");
     if (!priceId) {
       return NextResponse.json({ error: "Invalid plan" }, { status: 400 });
     }
 
-    const origin = req.headers.get("origin") || "https://get-billflow.vercel.app";
+    const origin = req.headers.get("origin") || SITE_URL;
 
     const sessionConfig: Stripe.Checkout.SessionCreateParams = {
       mode: "subscription",

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
+import { SITE_URL } from "@/lib/stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2026-03-25.dahlia",
@@ -21,7 +22,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "No customer found" }, { status: 400 });
     }
 
-    const origin = req.headers.get("origin") || "https://get-billflow.vercel.app";
+    const origin = req.headers.get("origin") || SITE_URL;
 
     const portalSession = await stripe.billingPortal.sessions.create({
       customer: customerId,

@@ -1,16 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
+import { getPlanFromPriceId } from "@/lib/stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2026-03-25.dahlia",
 });
-
-const PRICE_TO_PLAN: Record<string, string> = {
-  price_1TG0paLqrZZEjlA4SI9ox83k: "pro",
-  price_1TG0paLqrZZEjlA4dZsB2VIl: "pro",
-  price_1TG0paLqrZZEjlA4YOOHNIZU: "premium",
-  price_1TG0pbLqrZZEjlA42edteDCz: "premium",
-};
 
 export async function GET(req: NextRequest) {
   const sessionId = req.nextUrl.searchParams.get("session_id");
@@ -30,7 +24,7 @@ export async function GET(req: NextRequest) {
 
     // Determine plan from the price ID
     const priceId = session.line_items?.data?.[0]?.price?.id;
-    const plan = priceId ? PRICE_TO_PLAN[priceId] || "pro" : "pro";
+    const plan = getPlanFromPriceId(priceId) || "pro";
 
     return NextResponse.json({
       valid: true,

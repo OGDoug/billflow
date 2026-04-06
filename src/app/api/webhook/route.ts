@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { createClient } from "@supabase/supabase-js";
+import { getPlanFromPriceId } from "@/lib/stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2026-03-25.dahlia",
@@ -31,12 +32,7 @@ async function updateUserTier(customerId: string, tier: string, subscriptionId?:
 
 function getTierFromPrice(subscription: Stripe.Subscription): string {
   const priceId = subscription.items.data[0]?.price?.id;
-  const premiumPrices = ["price_1TG0paLqrZZEjlA4YOOHNIZU", "price_1TG0pbLqrZZEjlA42edteDCz"];
-  const proPrices = ["price_1TG0paLqrZZEjlA4SI9ox83k", "price_1TG0paLqrZZEjlA4dZsB2VIl"];
-
-  if (premiumPrices.includes(priceId)) return "premium";
-  if (proPrices.includes(priceId)) return "pro";
-  return "free";
+  return getPlanFromPriceId(priceId) || "free";
 }
 
 export async function POST(req: NextRequest) {
