@@ -2,8 +2,22 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "./supabase";
-import { saveSettings } from "./db";
+import { saveSettings, getSettings } from "./db";
 import type { UserTier } from "./types";
+
+async function getResolvedTier(userId: string): Promise<UserTier> {
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("tier")
+    .eq("id", userId)
+    .single();
+
+  if (error) {
+    return (getSettings().tier as UserTier) || "free";
+  }
+
+  return (data?.tier as UserTier) || "free";
+}
 
 export function useAuth() {
   const [user, setUser] = useState<any>(null);
@@ -16,13 +30,7 @@ export function useAuth() {
       setUser(user);
 
       if (user) {
-        const { data } = await supabase
-          .from("profiles")
-          .select("tier")
-          .eq("id", user.id)
-          .single();
-
-        const userTier = (data?.tier as UserTier) || "free";
+        const userTier = await getResolvedTier(user.id);
         setTier(userTier);
         saveSettings({ tier: userTier });
       } else {
@@ -36,18 +44,13 @@ export function useAuth() {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (event === "SIGNED_IN" && session?.user) {
         setUser(session.user);
-        const { data } = await supabase
-          .from("profiles")
-          .select("tier")
-          .eq("id", session.user.id)
-          .single();
-        const userTier = (data?.tier as UserTier) || "free";
+        const userTier = await getResolvedTier(session.user.id);
         setTier(userTier);
         saveSettings({ tier: userTier });
       } else if (event === "SIGNED_OUT") {
         setUser(null);
         setTier("free");
-        saveSettings({ tier: "free" });
+        saveSettings({ tier: "free", stripeSessionId: undefined });
       }
     });
 

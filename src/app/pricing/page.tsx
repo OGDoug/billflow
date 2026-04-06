@@ -17,8 +17,10 @@ export default function PricingPage() {
       if (user) {
         setUserEmail(user.email || null);
         setUserId(user.id);
-        const { data } = await supabase.from("profiles").select("tier").eq("id", user.id).single();
-        if (data?.tier) setCurrentTier(data.tier);
+        const { data, error } = await supabase.from("profiles").select("tier").eq("id", user.id).single();
+        if (!error && data?.tier) {
+          setCurrentTier(data.tier);
+        }
       }
     });
   }, []);
