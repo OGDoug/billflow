@@ -15,11 +15,20 @@ function LoginForm() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const errorParam = searchParams.get("error");
-    if (errorParam) {
-      setError(decodeURIComponent(errorParam));
-    }
-  }, [searchParams]);
+    const init = async () => {
+      const errorParam = searchParams.get("error");
+      if (errorParam) {
+        setError(decodeURIComponent(errorParam));
+      }
+
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        router.replace("/");
+      }
+    };
+
+    init();
+  }, [searchParams, router]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,7 +41,10 @@ function LoginForm() {
       setLoading(false);
       return;
     }
-    router.push("/invoices");
+
+    await supabase.auth.getSession();
+    router.replace("/");
+    router.refresh();
   };
 
   const handleGoogleLogin = async () => {

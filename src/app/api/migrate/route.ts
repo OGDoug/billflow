@@ -95,9 +95,10 @@ export async function GET(req: NextRequest) {
     });
     
   } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
     return NextResponse.json({
       success: false,
-      error: error.message,
+      error: message,
       message: 'Could not read migration file'
     }, { status: 500 });
   }

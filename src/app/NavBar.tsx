@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
-import { saveSettings } from "@/lib/db";
 
 export default function NavBar({ variant = "full" }: { variant?: "full" | "simple" }) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -11,13 +10,17 @@ export default function NavBar({ variant = "full" }: { variant?: "full" | "simpl
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      setUser(user);
+    const syncUser = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setUser(session?.user || null);
       setLoading(false);
-    });
+    };
+
+    syncUser();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user || null);
+      setLoading(false);
     });
 
     return () => subscription.unsubscribe();

@@ -40,7 +40,7 @@ export async function GET(req: NextRequest) {
         results.push({
           table,
           status: 'error',
-          error: error.message,
+          error: error instanceof Error ? error.message : 'Unknown error',
           icon: '💥'
         });
       }
@@ -123,7 +123,7 @@ export async function GET(req: NextRequest) {
   } catch (error) {
     return NextResponse.json({
       success: false,
-      error: error.message,
+      error: error instanceof Error ? error.message : 'Unknown error',
       message: 'Could not test database'
     }, { status: 500 });
   }

@@ -1,30 +1,14 @@
-import { createClient } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
   const { searchParams, origin } = new URL(req.url);
-  const code = searchParams.get("code");
-  const redirect = searchParams.get("redirect") || "/invoices";
+  const error = searchParams.get("error_description") || searchParams.get("error");
+  const redirect = searchParams.get("redirect") || "/";
 
-  if (code) {
-    try {
-      const supabase = createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-      );
-      const { error } = await supabase.auth.exchangeCodeForSession(code);
-      if (error) {
-        console.error("Auth error:", error);
-        // Redirect to login with error message
-        return NextResponse.redirect(`${origin}/login?error=${encodeURIComponent(error.message)}`);
-      }
-    } catch (err) {
-      console.error("Auth callback error:", err);
-      return NextResponse.redirect(`${origin}/login?error=Authentication%20failed`);
-    }
+  if (error) {
+    return NextResponse.redirect(`${origin}/login?error=${encodeURIComponent(error)}`);
   }
 
-  // Only allow relative redirects for security
-  const safePath = redirect.startsWith("/") ? redirect : "/invoices";
+  const safePath = redirect.startsWith("/") ? redirect : "/";
   return NextResponse.redirect(`${origin}${safePath}`);
 }
