@@ -22,11 +22,12 @@ export async function GET(req: NextRequest) {
           .limit(1);
         
         if (error) {
+          const isMissingTable = error.message.includes("schema cache") || error.message.includes("Could not find the table");
           results.push({
             table,
-            status: 'failed',
+            status: isMissingTable ? 'missing' : 'failed',
             error: error.message,
-            icon: '❌'
+            icon: isMissingTable ? '🟡' : '❌'
           });
         } else {
           results.push({
@@ -60,6 +61,7 @@ export async function GET(req: NextRequest) {
           .result { background: #f8fafc; padding: 15px; border-radius: 8px; margin: 10px 0; border-left: 4px solid ${allSuccess ? '#16a34a' : '#dc2626'}; }
           .success { border-color: #16a34a; }
           .failed { border-color: #dc2626; }
+          .missing { border-color: #f59e0b; }
           .error { border-color: #f59e0b; }
           .table-name { font-weight: bold; }
           .next-steps { background: #dbeafe; padding: 15px; border-radius: 8px; margin-top: 20px; }
@@ -99,12 +101,14 @@ export async function GET(req: NextRequest) {
         ` : `
           <div class="next-steps">
             <h2>🔧 Migration Incomplete</h2>
-            <p>Some tables are missing. Please:</p>
+            <p>The database API still cannot see one or more required tables in the <code>public</code> schema.</p>
             <ol>
-              <li>Go back to <a href="/api/migrate">Migration Instructions</a></li>
-              <li>Run the SQL in your Supabase dashboard</li>
-              <li>Return here to test again</li>
+              <li>Go to <a href="/api/migrate">Migration Instructions</a></li>
+              <li>Run the full SQL in the Supabase SQL Editor</li>
+              <li>Make sure it runs in the same project shown on the migration page</li>
+              <li>Return here and test again</li>
             </ol>
+            <p><strong>Tip:</strong> If you already created <code>invoices</code> manually, it may not match the expected schema or may not exist in <code>public</code>. Running the full migration is safe and idempotent.</p>
           </div>
         `}
         

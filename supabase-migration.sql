@@ -1,5 +1,8 @@
+-- Ensure required extension exists for gen_random_uuid()
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
 -- Create invoices table for Pro/Premium users
-CREATE TABLE IF NOT EXISTS invoices (
+CREATE TABLE IF NOT EXISTS public.invoices (
   id UUID PRIMARY KEY,
   user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
   invoice_number TEXT NOT NULL,
@@ -28,7 +31,7 @@ CREATE TABLE IF NOT EXISTS invoices (
 );
 
 -- Create saved_clients table for Pro users
-CREATE TABLE IF NOT EXISTS saved_clients (
+CREATE TABLE IF NOT EXISTS public.saved_clients (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
   name TEXT NOT NULL,
@@ -39,7 +42,7 @@ CREATE TABLE IF NOT EXISTS saved_clients (
 );
 
 -- Create mailing_list table for Pro users  
-CREATE TABLE IF NOT EXISTS mailing_list (
+CREATE TABLE IF NOT EXISTS public.mailing_list (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
   email TEXT NOT NULL,
@@ -50,7 +53,7 @@ CREATE TABLE IF NOT EXISTS mailing_list (
 );
 
 -- Create user_settings table for storing logo and other settings
-CREATE TABLE IF NOT EXISTS user_settings (
+CREATE TABLE IF NOT EXISTS public.user_settings (
   user_id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   logo TEXT, -- base64 data URL
   stripe_session_id TEXT,
@@ -59,23 +62,27 @@ CREATE TABLE IF NOT EXISTS user_settings (
 );
 
 -- Create indexes for performance
-CREATE INDEX IF NOT EXISTS idx_invoices_user_id ON invoices(user_id);
-CREATE INDEX IF NOT EXISTS idx_invoices_created_at ON invoices(created_at DESC);
-CREATE INDEX IF NOT EXISTS idx_invoices_status ON invoices(status);
-CREATE INDEX IF NOT EXISTS idx_saved_clients_user_id ON saved_clients(user_id);
-CREATE INDEX IF NOT EXISTS idx_mailing_list_user_id ON mailing_list(user_id);
+CREATE INDEX IF NOT EXISTS idx_invoices_user_id ON public.invoices(user_id);
+CREATE INDEX IF NOT EXISTS idx_invoices_created_at ON public.invoices(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_invoices_status ON public.invoices(status);
+CREATE INDEX IF NOT EXISTS idx_saved_clients_user_id ON public.saved_clients(user_id);
+CREATE INDEX IF NOT EXISTS idx_mailing_list_user_id ON public.mailing_list(user_id);
 
 -- Enable Row Level Security
-ALTER TABLE invoices ENABLE ROW LEVEL SECURITY;
-ALTER TABLE saved_clients ENABLE ROW LEVEL SECURITY;
-ALTER TABLE mailing_list ENABLE ROW LEVEL SECURITY;
-ALTER TABLE user_settings ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.invoices ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.saved_clients ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.mailing_list ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.user_settings ENABLE ROW LEVEL SECURITY;
 
 -- Create RLS policies - users can only access their own data
-CREATE POLICY "Users can access own invoices" ON invoices FOR ALL USING (auth.uid() = user_id);
-CREATE POLICY "Users can access own saved_clients" ON saved_clients FOR ALL USING (auth.uid() = user_id);
-CREATE POLICY "Users can access own mailing_list" ON mailing_list FOR ALL USING (auth.uid() = user_id);
-CREATE POLICY "Users can access own user_settings" ON user_settings FOR ALL USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Users can access own invoices" ON public.invoices;
+CREATE POLICY "Users can access own invoices" ON public.invoices FOR ALL USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Users can access own saved_clients" ON public.saved_clients;
+CREATE POLICY "Users can access own saved_clients" ON public.saved_clients FOR ALL USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Users can access own mailing_list" ON public.mailing_list;
+CREATE POLICY "Users can access own mailing_list" ON public.mailing_list FOR ALL USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Users can access own user_settings" ON public.user_settings;
+CREATE POLICY "Users can access own user_settings" ON public.user_settings FOR ALL USING (auth.uid() = user_id);
 
 -- Create triggers to update updated_at timestamps
 CREATE OR REPLACE FUNCTION update_updated_at_column()
@@ -86,5 +93,7 @@ BEGIN
 END;
 $$ language 'plpgsql';
 
-CREATE TRIGGER update_invoices_updated_at BEFORE UPDATE ON invoices FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
-CREATE TRIGGER update_user_settings_updated_at BEFORE UPDATE ON user_settings FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
+DROP TRIGGER IF EXISTS update_invoices_updated_at ON public.invoices;
+CREATE TRIGGER update_invoices_updated_at BEFORE UPDATE ON public.invoices FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
+DROP TRIGGER IF EXISTS update_user_settings_updated_at ON public.user_settings;
+CREATE TRIGGER update_user_settings_updated_at BEFORE UPDATE ON public.user_settings FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
