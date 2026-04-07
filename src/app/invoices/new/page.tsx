@@ -408,32 +408,30 @@ export default function NewInvoicePage() {
             <div className="space-y-3">
               {items.map((item, idx) => (
                 <div key={item.id} className="rounded-lg border border-zinc-800 bg-zinc-900/30 p-3 space-y-2 sm:space-y-0 sm:grid sm:grid-cols-12 sm:gap-2 sm:items-start sm:border-0 sm:bg-transparent sm:p-0 sm:rounded-none">
-                  <div className="flex gap-2 items-start sm:contents">
+                  <div className="space-y-2 sm:contents">
                     <select
                       value={item.kind}
                       onChange={(e) => updateItem(item.id, "kind", e.target.value)}
-                      className={`${inputClass} w-24 shrink-0 sm:w-auto sm:col-span-2`}
+                      className={`${inputClass} w-full sm:w-auto sm:col-span-2`}
                     >
                       <option value="item">Item</option>
                       <option value="service">Service</option>
                     </select>
-                    <>
-                      <textarea
-                        required
-                        placeholder="Description"
-                        value={item.description}
-                        onChange={(e) => updateItem(item.id, "description", e.target.value)}
-                        rows={4}
-                        className={`${inputClass} flex-1 min-h-[112px] resize-y sm:hidden`}
-                      />
-                      <input
-                        required
-                        placeholder="Description"
-                        value={item.description}
-                        onChange={(e) => updateItem(item.id, "description", e.target.value)}
-                        className={`${inputClass} hidden sm:block sm:${item.kind === "service" ? "col-span-6" : "col-span-4"}`}
-                      />
-                    </>
+                    <textarea
+                      required
+                      placeholder="Description"
+                      value={item.description}
+                      onChange={(e) => updateItem(item.id, "description", e.target.value)}
+                      rows={4}
+                      className={`${inputClass} w-full min-h-[112px] resize-y sm:hidden`}
+                    />
+                    <input
+                      required
+                      placeholder="Description"
+                      value={item.description}
+                      onChange={(e) => updateItem(item.id, "description", e.target.value)}
+                      className={`${inputClass} hidden sm:block sm:${item.kind === "service" ? "col-span-6" : "col-span-4"}`}
+                    />
                   </div>
                   <div className="flex gap-2 sm:contents">
                     {item.kind === "item" && (
