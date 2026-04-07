@@ -422,8 +422,8 @@ export default function NewInvoicePage() {
                       placeholder="Description"
                       value={item.description}
                       onChange={(e) => updateItem(item.id, "description", e.target.value)}
-                      rows={4}
-                      className={`${inputClass} w-full min-h-[112px] resize-y sm:hidden`}
+                      rows={3}
+                      className={`${inputClass} w-full min-h-[88px] resize-y sm:hidden`}
                     />
                     <input
                       required
@@ -442,7 +442,7 @@ export default function NewInvoicePage() {
                         placeholder="Qty"
                         value={item.quantity}
                         onChange={(e) => updateItem(item.id, "quantity", parseInt(e.target.value) || 0)}
-                        className={`${inputClass} w-20 sm:w-auto sm:col-span-2`}
+                        className={`${inputClass} w-20 shrink-0 sm:w-auto sm:col-span-2`}
                       />
                     )}
                     <input
@@ -453,12 +453,12 @@ export default function NewInvoicePage() {
                       placeholder="Rate"
                       value={item.rate || ""}
                       onChange={(e) => updateItem(item.id, "rate", parseFloat(e.target.value) || 0)}
-                      className={`${inputClass} flex-1 sm:col-span-3`}
+                      className={`${inputClass} min-w-0 flex-1 sm:col-span-3`}
                     />
                     <button
                       type="button"
                       onClick={() => removeItem(item.id)}
-                      className="rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-red-400 hover:bg-zinc-800 transition-colors sm:col-span-1 sm:px-2"
+                      className="rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-red-400 hover:bg-zinc-800 transition-colors shrink-0 sm:col-span-1 sm:px-2"
                     >
                       ×
                     </button>
