@@ -433,8 +433,8 @@ export default function NewInvoicePage() {
                       className={`${inputClass} hidden sm:block sm:${item.kind === "service" ? "col-span-6" : "col-span-4"}`}
                     />
                   </div>
-                  <div className="flex gap-2 sm:contents">
-                    {item.kind === "item" && (
+                  <div className="grid gap-2 grid-cols-[88px_minmax(0,1fr)_52px] sm:contents">
+                    {item.kind === "item" ? (
                       <input
                         required
                         type="number"
@@ -442,8 +442,10 @@ export default function NewInvoicePage() {
                         placeholder="Qty"
                         value={item.quantity}
                         onChange={(e) => updateItem(item.id, "quantity", parseInt(e.target.value) || 0)}
-                        className={`${inputClass} w-20 shrink-0 sm:w-auto sm:col-span-2`}
+                        className={`${inputClass} w-full sm:w-auto sm:col-span-2`}
                       />
+                    ) : (
+                      <div className="hidden sm:block" />
                     )}
                     <input
                       required
@@ -453,12 +455,12 @@ export default function NewInvoicePage() {
                       placeholder="Rate"
                       value={item.rate || ""}
                       onChange={(e) => updateItem(item.id, "rate", parseFloat(e.target.value) || 0)}
-                      className={`${inputClass} min-w-0 flex-1 sm:col-span-3`}
+                      className={`${inputClass} w-full min-w-0 sm:col-span-3`}
                     />
                     <button
                       type="button"
                       onClick={() => removeItem(item.id)}
-                      className="rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-red-400 hover:bg-zinc-800 transition-colors shrink-0 sm:col-span-1 sm:px-2"
+                      className="rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-red-400 hover:bg-zinc-800 transition-colors w-full sm:col-span-1 sm:px-2"
                     >
                       ×
                     </button>
