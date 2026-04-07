@@ -417,13 +417,23 @@ export default function NewInvoicePage() {
                       <option value="item">Item</option>
                       <option value="service">Service</option>
                     </select>
-                    <input
-                      required
-                      placeholder="Description"
-                      value={item.description}
-                      onChange={(e) => updateItem(item.id, "description", e.target.value)}
-                      className={`${inputClass} flex-1 sm:${item.kind === "service" ? "col-span-6" : "col-span-4"}`}
-                    />
+                    <>
+                      <textarea
+                        required
+                        placeholder="Description"
+                        value={item.description}
+                        onChange={(e) => updateItem(item.id, "description", e.target.value)}
+                        rows={3}
+                        className={`${inputClass} flex-1 min-h-[88px] resize-y sm:hidden`}
+                      />
+                      <input
+                        required
+                        placeholder="Description"
+                        value={item.description}
+                        onChange={(e) => updateItem(item.id, "description", e.target.value)}
+                        className={`${inputClass} hidden sm:block sm:${item.kind === "service" ? "col-span-6" : "col-span-4"}`}
+                      />
+                    </>
                   </div>
                   <div className="flex gap-2 sm:contents">
                     {item.kind === "item" && (
