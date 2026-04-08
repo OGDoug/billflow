@@ -407,8 +407,8 @@ export default function NewInvoicePage() {
             </div>
             <div className="space-y-3">
               {items.map((item, idx) => (
-                <div key={item.id} className="rounded-lg border border-zinc-800 bg-zinc-900/30 p-3 space-y-2 sm:space-y-0 sm:grid sm:grid-cols-12 sm:gap-2 sm:items-start sm:border-0 sm:bg-transparent sm:p-0 sm:rounded-none">
-                  <div className="space-y-2 sm:contents">
+                <div key={item.id} className="rounded-lg border border-zinc-800 bg-zinc-900/30 p-3 space-y-3 sm:space-y-0 sm:grid sm:grid-cols-12 sm:gap-2 sm:items-start sm:border-0 sm:bg-transparent sm:p-0 sm:rounded-none">
+                  <div className="grid gap-2 grid-cols-[92px_minmax(0,1fr)] items-start sm:contents">
                     <select
                       value={item.kind}
                       onChange={(e) => updateItem(item.id, "kind", e.target.value)}
@@ -422,8 +422,8 @@ export default function NewInvoicePage() {
                       placeholder="Description"
                       value={item.description}
                       onChange={(e) => updateItem(item.id, "description", e.target.value)}
-                      rows={3}
-                      className={`${inputClass} w-full min-h-[88px] resize-y sm:hidden`}
+                      rows={2}
+                      className={`${inputClass} w-full min-h-[76px] resize-y sm:hidden`}
                     />
                     <input
                       required
@@ -433,7 +433,7 @@ export default function NewInvoicePage() {
                       className={`${inputClass} hidden sm:block sm:${item.kind === "service" ? "col-span-6" : "col-span-4"}`}
                     />
                   </div>
-                  <div className="grid gap-2 grid-cols-[88px_minmax(0,1fr)_52px] sm:contents">
+                  <div className={`grid gap-2 ${item.kind === "item" ? "grid-cols-[72px_minmax(0,1fr)_44px]" : "grid-cols-[minmax(0,1fr)_44px]"} sm:contents`}>
                     {item.kind === "item" ? (
                       <input
                         required
@@ -442,7 +442,7 @@ export default function NewInvoicePage() {
                         placeholder="Qty"
                         value={item.quantity}
                         onChange={(e) => updateItem(item.id, "quantity", parseInt(e.target.value) || 0)}
-                        className={`${inputClass} w-full sm:w-auto sm:col-span-2`}
+                        className={`${inputClass} w-full text-sm sm:w-auto sm:col-span-2`}
                       />
                     ) : (
                       <div className="hidden sm:block" />
@@ -455,12 +455,12 @@ export default function NewInvoicePage() {
                       placeholder="Rate"
                       value={item.rate || ""}
                       onChange={(e) => updateItem(item.id, "rate", parseFloat(e.target.value) || 0)}
-                      className={`${inputClass} w-full min-w-0 sm:col-span-3`}
+                      className={`${inputClass} w-full min-w-0 text-sm sm:col-span-3`}
                     />
                     <button
                       type="button"
                       onClick={() => removeItem(item.id)}
-                      className="rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-red-400 hover:bg-zinc-800 transition-colors w-full sm:col-span-1 sm:px-2"
+                      className="rounded-lg border border-zinc-700 bg-zinc-900 px-2 py-2 text-sm text-red-400 hover:bg-zinc-800 transition-colors w-full sm:col-span-1 sm:px-2"
                     >
                       ×
                     </button>
