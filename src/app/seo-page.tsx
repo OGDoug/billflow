@@ -18,6 +18,8 @@ type SeoPageProps = {
   intro: string;
   ctaLabel: string;
   ctaHref?: string;
+  secondaryCtaLabel?: string;
+  secondaryCtaHref?: string;
   sections: SeoSection[];
   faqs?: SeoFaq[];
   relatedLinks?: { href: string; label: string; description: string }[];
@@ -41,6 +43,8 @@ export default function SeoPage({
   intro,
   ctaLabel,
   ctaHref = "/invoices/new",
+  secondaryCtaLabel = "Create Free Account",
+  secondaryCtaHref = "/signup?redirect=/invoices",
   sections,
   faqs,
   relatedLinks,
@@ -69,12 +73,15 @@ export default function SeoPage({
                 {ctaLabel}
               </Link>
               <Link
-                href="/pricing"
+                href={secondaryCtaHref}
                 className="inline-flex items-center justify-center rounded-lg border border-zinc-700 px-8 py-3.5 text-sm font-medium text-zinc-300 transition-colors hover:bg-zinc-800/50"
               >
-                View Pricing
+                {secondaryCtaLabel}
               </Link>
             </div>
+            <p className="mt-4 text-xs text-zinc-500">
+              Start with a free invoice now, then create an account if you want invoice history and cloud sync.
+            </p>
           </div>
         </section>
 
@@ -148,12 +155,20 @@ export default function SeoPage({
             <p className="mx-auto mt-4 max-w-xl text-sm leading-7 text-blue-100/80 sm:text-base">
               Duxbill gives freelancers and small businesses a faster way to draft invoices, export PDFs, and keep billing simple.
             </p>
-            <Link
-              href={ctaHref}
-              className="mt-8 inline-flex items-center justify-center rounded-lg bg-blue-600 px-8 py-3.5 text-sm font-semibold text-white transition-all hover:bg-blue-500 hover:shadow-lg hover:shadow-blue-500/25"
-            >
-              {ctaLabel}
-            </Link>
+            <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+              <Link
+                href={ctaHref}
+                className="inline-flex items-center justify-center rounded-lg bg-blue-600 px-8 py-3.5 text-sm font-semibold text-white transition-all hover:bg-blue-500 hover:shadow-lg hover:shadow-blue-500/25"
+              >
+                {ctaLabel}
+              </Link>
+              <Link
+                href={secondaryCtaHref}
+                className="inline-flex items-center justify-center rounded-lg border border-blue-400/20 bg-zinc-950/40 px-8 py-3.5 text-sm font-medium text-zinc-200 transition-colors hover:bg-zinc-900/70"
+              >
+                {secondaryCtaLabel}
+              </Link>
+            </div>
           </div>
         </section>
       </main>
