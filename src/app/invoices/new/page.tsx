@@ -408,7 +408,7 @@ export default function NewInvoicePage() {
             <div className="space-y-3">
               {items.map((item, idx) => (
                 <div key={item.id} className="rounded-lg border border-zinc-800 bg-zinc-900/30 p-3 space-y-3 sm:space-y-0 sm:grid sm:grid-cols-12 sm:gap-2 sm:items-start sm:border-0 sm:bg-transparent sm:p-0 sm:rounded-none">
-                  <div className="grid gap-2 grid-cols-[92px_minmax(0,1fr)] items-start sm:contents">
+                  <div className="grid gap-2 grid-cols-[76px_minmax(0,1fr)] items-start sm:contents">
                     <select
                       value={item.kind}
                       onChange={(e) => updateItem(item.id, "kind", e.target.value)}
