@@ -137,6 +137,16 @@ export default function FreeInvoiceGeneratorPage() {
           label: "How to create an invoice",
           description: "Learn the core steps, common mistakes, and best practices for building invoices clients can approve and pay quickly.",
         },
+        {
+          href: "/invoice-template-for-contractors",
+          label: "Invoice template for contractors",
+          description: "Learn how to bill labor, materials, deposits, and job phases more clearly.",
+        },
+        {
+          href: "/invoice-template-for-designers",
+          label: "Invoice template for designers",
+          description: "See how designers can invoice projects, retainers, and revision rounds with better clarity.",
+        },
       ]}
       schema={schema}
     />

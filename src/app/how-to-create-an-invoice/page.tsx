@@ -152,6 +152,16 @@ export default function HowToCreateAnInvoicePage() {
           label: "Freelance invoice template guide",
           description: "See how to adapt invoice structure for freelance services, retainers, and project billing.",
         },
+        {
+          href: "/invoice-template-for-contractors",
+          label: "Invoice template for contractors",
+          description: "Apply the same invoice basics to contractor jobs, labor, materials, and milestone billing.",
+        },
+        {
+          href: "/invoice-template-for-designers",
+          label: "Invoice template for designers",
+          description: "See how designers translate project scope and revisions into line items clients can approve quickly.",
+        },
       ]}
       schema={schema}
     />

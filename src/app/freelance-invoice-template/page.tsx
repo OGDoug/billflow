@@ -125,6 +125,11 @@ export default function FreelanceInvoiceTemplatePage() {
           label: "How to create an invoice",
           description: "Use a practical step-by-step checklist for writing invoices correctly the first time.",
         },
+        {
+          href: "/invoice-template-for-designers",
+          label: "Invoice template for designers",
+          description: "See how creative freelancers can structure invoices around deliverables, retainers, and revisions.",
+        },
       ]}
       schema={schema}
     />
