@@ -4,7 +4,7 @@ import { SITE_URL } from "@/lib/stripe";
 
 const title = "Invoice Template for Contractors | Progress, Labor, and Materials | Duxbill";
 const description =
-  "Use this contractor invoice template guide to bill clearly for labor, materials, progress payments, and project phases without creating avoidable payment delays.";
+  "Learn what a contractor invoice template should include, how to organize labor and materials billing, and when a better invoicing workflow beats manual documents.";
 const path = "/invoice-template-for-contractors";
 
 export const metadata: Metadata = {
@@ -75,14 +75,15 @@ export default function InvoiceTemplateForContractorsPage() {
     <SeoPage
       eyebrow="Contractor invoice guide"
       title="Invoice template for contractors who need clear labor and materials billing"
-      intro="Contractor invoices need more operational detail than a generic template. Clients often need to see the job address, scope, labor breakdown, materials, and payment terms before approving payment, especially on larger residential or commercial work."
-      ctaLabel="Create a Contractor Invoice"
+      intro="Contractor invoices usually need more job context than a generic template provides. The right structure helps clients approve labor, materials, deposits, and project phases quickly without turning billing into another paperwork project."
+      ctaLabel="Create Contractor Invoice"
+      secondaryCtaLabel="Start Free Account"
       sections={[
         {
           title: "What makes a contractor invoice template different",
           body: [
-            "Contractors are often billing for a mix of labor, materials, deposits, change orders, and project phases. A generic invoice can work in a pinch, but it usually leaves out the context a homeowner, property manager, or accounts payable team needs to process the bill confidently.",
-            "A useful contractor invoice template should help you document what was done, where the work happened, and how the total was calculated. That reduces disputes and makes it easier for the client to compare the invoice against the estimate or signed proposal.",
+            "Contractors are often billing for a mix of labor, materials, deposits, change orders, and project phases. That means the invoice has to do a little more than show an amount due. It has to make the job context easy to follow.",
+            "A useful contractor invoice template should help you document what was done, where the work happened, and how the total was calculated. That clarity reduces disputes and makes it easier for the client to compare the invoice against the approved estimate or proposal.",
           ],
           bullets: [
             "Customer name and billing contact.",
@@ -96,15 +97,15 @@ export default function InvoiceTemplateForContractorsPage() {
         {
           title: "How contractors should structure line items",
           body: [
-            "Clear line items matter because contractor work is often tied to a quote, a draw schedule, or a punch-list milestone. If the invoice only says 'construction services,' the client may have to call you to understand what they are being asked to approve.",
-            "Use line items that reflect the way the job was sold. That could mean labor by trade, materials by category, or billing by project phase such as demolition, rough-in, installation, or final completion. For smaller jobs, a simple labor-hours-plus-materials format is often enough.",
+            "Clear line items matter because contractor work is often tied to a quote, a draw schedule, or a phase of completion. If the invoice only says 'construction services,' the client may have to call you to understand what they are approving.",
+            "Use line items that reflect how the job was sold. That might mean labor by trade, materials by category, or billing by project phase such as demolition, rough-in, installation, or final completion. The invoice should mirror the logic of the job, not force the client to decode it.",
           ],
         },
         {
           title: "When to bill by milestone instead of one final invoice",
           body: [
-            "Many contractors do not wait until the end of the project to bill. Progress invoices can protect cash flow and make it easier for clients to approve payments in stages. That is especially useful when material purchases are front-loaded or the project spans multiple weeks.",
-            "If you use milestone billing, label each invoice so it clearly maps to the agreed schedule. Phrases like '50% deposit,' 'framing completion,' or 'final balance after walkthrough' are more useful than vague partial-payment language.",
+            "Many contractors do not wait until the end of the project to bill. Progress invoices protect cash flow and make it easier for clients to approve payments in stages, especially when material costs hit early or the work spans multiple weeks.",
+            "If you use milestone billing, label the invoice so it clearly maps to the agreed schedule. Short phrases like '50% deposit,' 'framing completion,' or 'final balance after walkthrough' are more useful than generic partial-payment language.",
           ],
         },
         {
@@ -118,6 +119,13 @@ export default function InvoiceTemplateForContractorsPage() {
             "Separate taxable materials from non-taxable labor if your local rules require it.",
             "Name the project phase or service date range when invoicing progress work.",
             "State accepted payment methods so the client knows how to settle the invoice.",
+          ],
+        },
+        {
+          title: "Why contractors outgrow manual invoice templates",
+          body: [
+            "A template can help you understand the structure of a contractor invoice, but it still leaves you editing a document by hand every time you bill. That is where mistakes, mismatched totals, and inconsistent formatting start to creep in.",
+            "Duxbill is the cleaner next step when you want contractor-specific clarity without carrying the overhead of manual paperwork. It keeps the invoice focused on the job details that matter and gets you to a send-ready bill faster.",
           ],
         },
       ]}
@@ -137,12 +145,17 @@ export default function InvoiceTemplateForContractorsPage() {
           answer:
             "Usually yes. Including the service or project address helps clients, office staff, and property managers match the invoice to the correct job, especially when you do repeat work for the same customer.",
         },
+        {
+          question: "Should contractors keep using a document template for repeat billing?",
+          answer:
+            "Usually only if invoicing is occasional. When billing becomes routine, a dedicated invoicing workflow is typically faster and less error-prone than editing the same template for every job.",
+        },
       ]}
       relatedLinks={[
         {
           href: "/free-invoice-generator",
           label: "Free invoice generator",
-          description: "Build a contractor invoice online and export a clean PDF instead of editing a document by hand.",
+          description: "See when an invoice generator is a better fit than editing contractor invoice documents manually.",
         },
         {
           href: "/how-to-create-an-invoice",

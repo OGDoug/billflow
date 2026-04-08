@@ -4,7 +4,7 @@ import { SITE_URL } from "@/lib/stripe";
 
 const title = "Freelance Invoice Template Guide | What to Include | Duxbill";
 const description =
-  "Learn how to use a freelance invoice template that covers client details, scope, rates, payment terms, and the exact information needed to get paid faster.";
+  "Learn what a freelance invoice template should include, how freelancers should structure invoice details, and when a simple invoicing tool is better than editing templates manually.";
 const path = "/freelance-invoice-template";
 
 export const metadata: Metadata = {
@@ -51,14 +51,15 @@ export default function FreelanceInvoiceTemplatePage() {
     <SeoPage
       eyebrow="Freelancer billing guide"
       title="Freelance invoice template: what to include and how to use it"
-      intro="A freelance invoice template should do more than look clean. It should make the job, rate, terms, and payment deadline obvious so clients can approve and pay without extra questions."
-      ctaLabel="Create a Freelancer Invoice"
+      intro="A freelance invoice template is useful as a reference, but most freelancers do not need another document to maintain. They need a clear invoice structure they can reuse quickly without introducing avoidable errors."
+      ctaLabel="Create Freelance Invoice"
+      secondaryCtaLabel="Start Free Account"
       sections={[
         {
           title: "The purpose of a freelance invoice template",
           body: [
-            "Freelancers usually need repeatable structure more than fancy design. A good invoice template gives you a reliable format for billing projects, retainers, one-off services, or productized work without rebuilding the document every time.",
-            "The goal is consistency. When your invoices always show the same essential details in the same places, clients know how to process them and you spend less time correcting omissions.",
+            "Freelancers usually need repeatable structure more than a decorative document. A good invoice template sets expectations for what belongs on the invoice so the client can review it quickly and your billing process stays consistent.",
+            "The key point is not the template file itself. It is having a reliable way to include the right details every time without rebuilding the invoice from scratch.",
           ],
           bullets: [
             "Your business name and contact details.",
@@ -72,21 +73,21 @@ export default function FreelanceInvoiceTemplatePage() {
         {
           title: "How freelancers should describe their work",
           body: [
-            "One of the biggest invoice mistakes is using vague line items like 'design work' or 'consulting.' That may be technically true, but it often creates follow-up questions from clients or finance teams.",
-            "Use line items that anchor the invoice to the project scope. Instead of a generic label, write something like 'Homepage wireframes and revisions' or 'April SEO consulting retainer.' Clear descriptions help clients match your invoice to the work they approved.",
+            "One of the biggest invoice mistakes is relying on vague line items like 'design work' or 'consulting.' That language may be technically correct, but it often creates unnecessary follow-up from clients or finance teams.",
+            "Use line items that anchor the invoice to the approved scope. A short, specific description is usually enough. You do not need to over-document the work, but the client should immediately understand what they are paying for.",
           ],
         },
         {
-          title: "Template vs. invoice generator",
+          title: "Template vs. invoice tool",
           body: [
-            "A static template can work if you invoice occasionally. But if you bill clients every month, a generator usually removes repetitive formatting work and reduces the chance of manual math errors.",
-            "Duxbill gives you the structure of a good freelance invoice template while handling totals and PDF output for you. That keeps the workflow simple without forcing you into a heavy accounting platform.",
+            "A static template can work when you invoice occasionally and do not mind manual editing. The tradeoff is that every invoice still depends on you to update fields, check totals, and make sure the final document looks finished.",
+            "That is where Duxbill becomes the more practical option. It gives you the structure of a good freelance invoice template while turning invoice creation into a faster repeatable workflow instead of a document-editing task.",
           ],
         },
         {
           title: "Best practices that improve payment speed",
           body: [
-            "Freelancers often focus on the design of the invoice and overlook the operational details that drive payment. Fast payment usually comes down to clarity, not decoration.",
+            "Freelancers often focus on how the invoice looks and overlook the small details that actually drive payment. Fast payment usually comes from clarity, not decoration.",
           ],
           bullets: [
             "Use an invoice number format that is easy to reference in emails.",
@@ -94,6 +95,13 @@ export default function FreelanceInvoiceTemplatePage() {
             "Match the client name to the legal entity or team that actually pays invoices.",
             "State accepted payment methods in the notes area.",
             "Send the invoice promptly while the work is still fresh for the client.",
+          ],
+        },
+        {
+          title: "How to use this guide without relying on a template forever",
+          body: [
+            "Use this page as a checklist for what your freelance invoices should contain. Then switch to a workflow that lets you create the invoice directly instead of repeatedly translating the same structure into another file.",
+            "That is the natural handoff to Duxbill. You keep the clarity of a freelancer-focused invoice template, but you spend less time formatting and more time getting invoices out the door.",
           ],
         },
       ]}
@@ -113,17 +121,22 @@ export default function FreelanceInvoiceTemplatePage() {
           answer:
             "Usually yes, but you should still adapt line-item descriptions, payment instructions, tax handling, and legal entity names to match each client relationship.",
         },
+        {
+          question: "When should a freelancer stop using a manual template?",
+          answer:
+            "Usually when invoicing becomes frequent enough that editing a document starts to feel repetitive or error-prone. At that point, a simple invoicing tool is often the faster and more reliable workflow.",
+        },
       ]}
       relatedLinks={[
         {
           href: "/free-invoice-generator",
           label: "Free invoice generator",
-          description: "Skip manual templates and build a ready-to-send invoice online with PDF export.",
+          description: "See what to look for in an invoice generator before replacing manual template work.",
         },
         {
           href: "/how-to-create-an-invoice",
           label: "How to create an invoice",
-          description: "Use a practical step-by-step checklist for writing invoices correctly the first time.",
+          description: "Review the core invoice checklist and the mistakes that slow down payment.",
         },
         {
           href: "/invoice-template-for-designers",

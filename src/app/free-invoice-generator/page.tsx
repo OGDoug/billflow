@@ -4,7 +4,7 @@ import { SITE_URL } from "@/lib/stripe";
 
 const title = "Free Invoice Generator | Create Professional Invoices Online | Duxbill";
 const description =
-  "Use Duxbill's free invoice generator to create professional invoices online, add line items and tax, and export a clean PDF in minutes.";
+  "Learn what to look for in a free invoice generator, what details matter on every invoice, and when a simple tool beats editing templates by hand.";
 const path = "/free-invoice-generator";
 
 export const metadata: Metadata = {
@@ -52,15 +52,15 @@ export default function FreeInvoiceGeneratorPage() {
           name: "What should a free invoice generator include?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "A useful invoice generator should let you add sender and client details, line items, pricing, tax, notes, and a due date, then export a professional PDF.",
+            text: "A useful invoice generator should cover the core invoice details such as sender and client information, itemized charges, dates, totals, tax if needed, and a clean export format.",
           },
         },
         {
           "@type": "Question",
-          name: "Can I create an invoice without signing up?",
+          name: "When is a free invoice generator enough?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Yes. Duxbill lets you create invoices in the browser without requiring an account before you get started.",
+            text: "A free invoice generator is often enough when you need to create and send a professional invoice quickly. If you invoice repeatedly, saved history and a more repeatable workflow become more important.",
           },
         },
       ],
@@ -69,43 +69,57 @@ export default function FreeInvoiceGeneratorPage() {
 
   return (
     <SeoPage
-      eyebrow="Free invoice tool"
-      title="Free invoice generator for freelancers and small businesses"
-      intro="Create polished invoices without wrestling with spreadsheets or clunky software. Duxbill helps you build an invoice, calculate totals, and export a clean PDF from your browser in a few minutes."
-      ctaLabel="Open Free Invoice Generator"
+      eyebrow="Invoice generator guide"
+      title="Free invoice generator guide for freelancers and small businesses"
+      intro="A free invoice generator should help you move from draft to sendable invoice without turning billing into a formatting project. The real value is speed, clarity, and a workflow you can keep using as invoicing becomes routine."
+      ctaLabel="Create Invoice in Duxbill"
+      secondaryCtaLabel="Start Free Account"
       sections={[
         {
-          title: "What a good invoice generator should actually do",
+          title: "What a good free invoice generator should actually do",
           body: [
-            "A free invoice generator is only useful if it helps you send something professional quickly. That means collecting the essential business details, supporting line items and taxes, and producing a PDF your client can read without confusion.",
-            "Duxbill is designed around that core workflow. You can enter your business details, add products or services, set a due date, include notes, and create a finished invoice without needing to format a document by hand.",
+            "A free invoice generator is useful when it removes busywork, not when it gives you another document to babysit. The essentials are straightforward: accurate business and client details, clean line items, clear totals, and an invoice the client can process without extra explanation.",
+            "That is why the better option is usually a focused invoicing workflow instead of a blank template. Duxbill gives you the structure clients expect while cutting out the manual formatting that slows invoicing down.",
           ],
           bullets: [
-            "Add your business name and address so clients know exactly who billed them.",
-            "Include client contact details to reduce payment delays and back-and-forth.",
-            "List products or services with quantities, rates, and tax where needed.",
-            "Generate a clear total and export a PDF that is ready to send.",
+            "Business and client details that are easy to verify.",
+            "Itemized charges, totals, and tax support where needed.",
+            "A due date and payment notes so the next step is obvious.",
+            "A clean export or send-ready format that does not need cleanup elsewhere.",
           ],
         },
         {
-          title: "Why freelancers use an online invoice generator instead of a template",
+          title: "Why an invoice generator often beats a manual template",
           body: [
-            "Templates are useful, but they still require manual editing every time you invoice someone. An online generator can speed that up by handling structure, totals, and formatting for you.",
-            "If you invoice regularly, the time savings add up fast. You spend less effort fixing layouts and more effort making sure the invoice is accurate, which matters more to getting paid on time.",
+            "Templates still leave you doing repetitive work: editing fields, checking spacing, recalculating totals, and exporting the file in a format that looks finished. That may be acceptable for occasional billing, but it is a weak long-term workflow.",
+            "An invoice generator is a better fit when you want the structure handled for you so your attention stays on the bill itself. For most freelancers and small businesses, that is the point where a lightweight product becomes more practical than another free document.",
           ],
         },
         {
-          title: "What to include before you send an invoice",
+          title: "What information every invoice still needs",
           body: [
-            "Before you send any invoice, check that the basics are covered: your business details, the client name, a unique invoice number, the service period or item descriptions, pricing, taxes, and a due date. Missing one of those pieces is one of the easiest ways to create payment friction.",
-            "A short note with payment terms can also help. For example, if you expect bank transfer within 14 days or charge late fees after a certain date, add that clearly in the notes section.",
+            "No tool can rescue an incomplete invoice. Before you send one, make sure it clearly identifies who billed whom, what was delivered, how the total was calculated, and when payment is due.",
+            "That does not require a long manual process. It requires a short review and a format that makes missing details obvious before you send.",
+          ],
+          bullets: [
+            "Invoice number, issue date, and due date.",
+            "Service or product descriptions that map to the approved work.",
+            "Subtotal, tax treatment, and final amount due.",
+            "Payment instructions or terms the client can act on immediately.",
           ],
         },
         {
-          title: "When Duxbill is a strong fit",
+          title: "When a free tool is enough and when to move up",
           body: [
-            "Duxbill works well for solo freelancers, consultants, designers, developers, contractors, and small teams that want a fast invoice workflow without bloated accounting software.",
-            "It is especially useful if your immediate goal is simple: create a clean invoice, export a PDF, and keep moving. You do not need to set up a complex system just to send a bill.",
+            "If you need to create a single invoice today, a free invoice generator is often enough. If you send invoices repeatedly, the better question becomes whether the workflow is easy to reuse, easy to track, and easy to trust.",
+            "Duxbill is built for that next step. You can start with a free invoice, and when you want invoice history and a steadier billing workflow, the product is already set up for it.",
+          ],
+        },
+        {
+          title: "Why Duxbill is the natural next step",
+          body: [
+            "Duxbill is a strong fit for freelancers, consultants, contractors, and small service businesses that want invoice creation to stay simple. It keeps the process focused on drafting a clear bill quickly, not on managing a bloated accounting stack.",
+            "That makes it useful both for first-time invoices and for repeat billing. The page you are on is the guide. The product is the faster way to do the work.",
           ],
         },
       ]}
@@ -113,12 +127,12 @@ export default function FreeInvoiceGeneratorPage() {
         {
           question: "What should a free invoice generator include?",
           answer:
-            "At minimum, it should support your business information, client details, invoice numbering, itemized charges, taxes, payment notes, and PDF export. If any of those are missing, you usually end up editing the invoice manually somewhere else.",
+            "At minimum, it should support business and client information, invoice numbering, itemized charges, totals, taxes where relevant, payment notes, and a clean export or send-ready format. If those basics are missing, you usually end up finishing the invoice somewhere else.",
         },
         {
-          question: "Can I create an invoice without signing up?",
+          question: "Is a free invoice generator enough for a real business?",
           answer:
-            "Yes. Duxbill is built so you can start drafting an invoice right away in your browser instead of going through a long onboarding flow first.",
+            "It can be enough when you need to create and send invoices quickly without extra setup. If invoicing becomes a recurring part of your workflow, a tool that also supports a more repeatable billing process usually makes more sense.",
         },
         {
           question: "Is a generated invoice still professional enough to send to clients?",
@@ -130,22 +144,22 @@ export default function FreeInvoiceGeneratorPage() {
         {
           href: "/freelance-invoice-template",
           label: "Freelance invoice template guide",
-          description: "See what a freelancer-focused invoice template should include and how to adapt it for repeat client work.",
+          description: "See what a freelancer-focused invoice structure should include and when to move beyond templates.",
         },
         {
           href: "/how-to-create-an-invoice",
           label: "How to create an invoice",
-          description: "Learn the core steps, common mistakes, and best practices for building invoices clients can approve and pay quickly.",
+          description: "Review the core invoice checklist and the mistakes that slow down payment.",
         },
         {
           href: "/invoice-template-for-contractors",
           label: "Invoice template for contractors",
-          description: "Learn how to bill labor, materials, deposits, and job phases more clearly.",
+          description: "Learn how contractors should handle labor, materials, deposits, and project phases.",
         },
         {
           href: "/invoice-template-for-designers",
           label: "Invoice template for designers",
-          description: "See how designers can invoice projects, retainers, and revision rounds with better clarity.",
+          description: "See how designers can structure invoices around deliverables, retainers, and revision rounds.",
         },
       ]}
       schema={schema}
