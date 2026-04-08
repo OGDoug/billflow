@@ -430,7 +430,7 @@ export default function NewInvoicePage() {
                       placeholder="Description"
                       value={item.description}
                       onChange={(e) => updateItem(item.id, "description", e.target.value)}
-                      className={`${inputClass} hidden sm:block sm:${item.kind === "service" ? "col-span-6" : "col-span-4"}`}
+                      className={`${inputClass} hidden sm:block sm:${item.kind === "service" ? "col-span-7" : "col-span-5"}`}
                     />
                   </div>
                   <div className={`grid gap-2 ${item.kind === "item" ? "grid-cols-[72px_minmax(0,1fr)_44px]" : "grid-cols-[minmax(0,1fr)_44px]"} sm:contents`}>
@@ -442,7 +442,7 @@ export default function NewInvoicePage() {
                         placeholder="Qty"
                         value={item.quantity}
                         onChange={(e) => updateItem(item.id, "quantity", parseInt(e.target.value) || 0)}
-                        className={`${inputClass} w-full text-sm sm:w-auto sm:col-span-2`}
+                        className={`${inputClass} w-full text-sm sm:w-auto sm:col-span-1`}
                       />
                     ) : (
                       <div className="hidden sm:block" />
@@ -455,7 +455,7 @@ export default function NewInvoicePage() {
                       placeholder="Rate"
                       value={item.rate || ""}
                       onChange={(e) => updateItem(item.id, "rate", parseFloat(e.target.value) || 0)}
-                      className={`${inputClass} w-full min-w-0 text-sm sm:col-span-3`}
+                      className={`${inputClass} w-full min-w-0 text-sm sm:col-span-2`}
                     />
                     <button
                       type="button"
