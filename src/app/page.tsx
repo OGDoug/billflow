@@ -260,7 +260,7 @@ export default function Home() {
           Your invoices, your data. Always private.
         </p>
         <p className="mt-2 text-zinc-600">
-          Powered by Woodstock AI Engineering.
+          Powered by Woodstock AIE.
         </p>
       </footer>
     </div>

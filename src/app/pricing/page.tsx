@@ -127,7 +127,7 @@ export default function PricingPage() {
             Free invoicing forever. Upgrade when you need more power.
           </p>
           <p className="text-xs text-zinc-500 max-w-xl mx-auto mt-3">
-            Duxbill subscriptions are billed securely by Stripe on behalf of Woodstock AI Engineering.
+            Duxbill subscriptions are billed securely by Stripe on behalf of Woodstock AIE.
           </p>
 
           {/* Billing Toggle */}
@@ -223,7 +223,7 @@ export default function PricingPage() {
         <div className="text-center mt-12 space-y-2">
           <p className="text-sm text-zinc-500">All plans include unlimited invoice creation. Cancel anytime.</p>
           <p className="text-xs text-zinc-600">Payments processed securely by Stripe.</p>
-          <p className="text-xs text-zinc-600">Charges will appear under Woodstock AI Engineering.</p>
+          <p className="text-xs text-zinc-600">Charges will appear under Woodstock AIE.</p>
         </div>
       </main>
     </div>
