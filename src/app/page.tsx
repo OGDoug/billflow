@@ -259,6 +259,9 @@ export default function Home() {
         <p className="mt-2 text-zinc-600">
           Your invoices, your data. Always private.
         </p>
+        <p className="mt-2 text-zinc-600">
+          Powered by Woodstock AI Engineering.
+        </p>
       </footer>
     </div>
   );
