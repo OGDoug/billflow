@@ -5,6 +5,7 @@ import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
+import { SITE_URL } from "@/lib/stripe";
 
 function LoginForm() {
   const router = useRouter();
@@ -50,7 +51,7 @@ function LoginForm() {
   const handleGoogleLogin = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: `${window.location.origin}/auth/callback` },
+      options: { redirectTo: `${SITE_URL}/auth/callback` },
     });
     if (error) setError(error.message);
   };
@@ -104,7 +105,7 @@ function LoginForm() {
               onClick={async () => {
                 if (!email) { setError("Enter your email first"); return; }
                 setError("");
-                const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${window.location.origin}/auth/callback` });
+                const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${SITE_URL}/auth/callback` });
                 if (error) setError(error.message);
                 else setError("Check your email for a password reset link.");
               }}

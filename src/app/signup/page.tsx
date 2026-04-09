@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { supabase } from "@/lib/supabase";
+import { SITE_URL } from "@/lib/stripe";
 
 function SignupForm() {
   const searchParams = useSearchParams();
@@ -23,7 +24,7 @@ function SignupForm() {
     const { error } = await supabase.auth.signUp({
       email,
       password,
-      options: { emailRedirectTo: `${window.location.origin}/auth/callback?redirect=${encodeURIComponent(redirectTo)}` },
+      options: { emailRedirectTo: `${SITE_URL}/auth/callback?redirect=${encodeURIComponent(redirectTo)}` },
     });
 
     if (error) {
@@ -38,7 +39,7 @@ function SignupForm() {
   const handleGoogleSignup = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: `${window.location.origin}/auth/callback?redirect=${encodeURIComponent(redirectTo)}` },
+      options: { redirectTo: `${SITE_URL}/auth/callback?redirect=${encodeURIComponent(redirectTo)}` },
     });
     if (error) setError(error.message);
   };
