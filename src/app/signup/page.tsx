@@ -13,12 +13,14 @@ function SignupForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [notice, setNotice] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setNotice("");
     setLoading(true);
 
     const { error } = await supabase.auth.signUp({
@@ -37,6 +39,7 @@ function SignupForm() {
   };
 
   const handleGoogleSignup = async () => {
+    setNotice("");
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: { redirectTo: `${SITE_URL}/auth/callback?redirect=${encodeURIComponent(redirectTo)}` },
@@ -59,14 +62,23 @@ function SignupForm() {
             <button
               onClick={async () => {
                 setError("");
-                const { error } = await supabase.auth.resend({ type: "signup", email });
+                setNotice("");
+                const { error } = await supabase.auth.resend({
+                  type: "signup",
+                  email,
+                  options: {
+                    emailRedirectTo: `${SITE_URL}/auth/callback?redirect=${encodeURIComponent(redirectTo)}`,
+                  },
+                });
                 if (error) setError(error.message);
-                else setError("New confirmation email sent!");
+                else setNotice("New confirmation email sent. Check inbox, spam, and promotions.");
               }}
               className="text-xs text-zinc-500 hover:text-zinc-300 transition-colors"
             >
               Resend confirmation email
             </button>
+            {error && <p className="text-sm text-red-400">{error}</p>}
+            {notice && <p className="text-sm text-green-400">{notice}</p>}
             <Link href="/login" className="inline-block text-sm text-blue-400 hover:text-blue-300">← Back to login</Link>
           </div>
         </div>
