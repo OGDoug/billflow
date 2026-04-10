@@ -2,12 +2,12 @@ export const SITE_URL = "https://duxbill.com";
 
 export const STRIPE_PRICE_IDS = {
   pro: {
-    monthly: "price_1TG0paLqrZZEjlA4SI9ox83k",
-    annual: "price_1TG0paLqrZZEjlA4dZsB2VIl",
+    monthly: "price_1TKfrwLtaUaI2ULoQYZL0p6y",
+    annual: "price_1TKfrvLtaUaI2ULoYkAB24MJ",
   },
   premium: {
-    monthly: "price_1TG0paLqrZZEjlA4YOOHNIZU",
-    annual: "price_1TG0pbLqrZZEjlA42edteDCz",
+    monthly: "price_1TKfrtLtaUaI2ULoMjiARNH4",
+    annual: "price_1TKfrsLtaUaI2ULoDtrclcwn",
   },
 } as const;
 
