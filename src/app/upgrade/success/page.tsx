@@ -40,7 +40,7 @@ function SuccessContent() {
           const tier = data.plan as UserTier;
           setPlan(tier);
           const settings = getSettings();
-          if (tier === "premium" || (tier === "pro" && settings.tier === "free")) {
+          if (tier === "premium" || tier === "pro" || settings.tier === "free") {
             saveSettings({ tier, stripeSessionId: sessionId });
           }
           setState("verified");

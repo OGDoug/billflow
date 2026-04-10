@@ -29,6 +29,8 @@ export default function InvoicesPage() {
   const [payModal, setPayModal] = useState<string | null>(null);
   const [payNote, setPayNote] = useState("");
   const [payAmount, setPayAmount] = useState("");
+  const [portalLoading, setPortalLoading] = useState(false);
+  const [portalError, setPortalError] = useState<string | null>(null);
 
   const fetchInvoices = async () => {
     try {
@@ -220,17 +222,34 @@ export default function InvoicesPage() {
             {premium && getSettings().stripeSessionId && (
               <button
                 onClick={async () => {
-                  const res = await fetch("/api/portal", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ sessionId: getSettings().stripeSessionId }),
-                  });
-                  const data = await res.json();
-                  if (data.url) window.location.href = data.url;
+                  const sessionId = getSettings().stripeSessionId;
+                  if (!sessionId) return;
+
+                  setPortalLoading(true);
+                  setPortalError(null);
+
+                  try {
+                    const res = await fetch("/api/portal", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ sessionId }),
+                    });
+                    const data = await res.json();
+                    if (data.url) {
+                      window.location.href = data.url;
+                      return;
+                    }
+                    setPortalError(data?.error || "Could not open billing portal.");
+                  } catch (error) {
+                    setPortalError(error instanceof Error ? error.message : "Could not open billing portal.");
+                  } finally {
+                    setPortalLoading(false);
+                  }
                 }}
-                className="text-sm text-zinc-500 hover:text-white transition-colors"
+                disabled={portalLoading}
+                className="text-sm text-zinc-500 hover:text-white transition-colors disabled:opacity-50"
               >
-                Manage Subscription
+                {portalLoading ? "Opening billing…" : "Manage Subscription"}
               </button>
             )}
             <Link href="/mailing-list" className="text-sm text-zinc-400 hover:text-white transition-colors">
@@ -238,6 +257,12 @@ export default function InvoicesPage() {
             </Link>
           </div>
         </div>
+
+        {portalError && (
+          <div className="mb-4 rounded-lg border border-red-500/30 bg-red-950/30 px-4 py-3 text-sm text-red-300">
+            Billing portal error: {portalError}
+          </div>
+        )}
 
         {/* A/R Alerts — Premium tier */}
         {premiumTier && (overdueInvoices.length > 0 || dueSoonInvoices.length > 0) && (
