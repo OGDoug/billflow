@@ -107,10 +107,12 @@ export default function PricingPage() {
       if (data.url) {
         window.location.href = data.url;
       } else {
-        alert("Something went wrong. Please try again.");
+        const details = data?.error || `Checkout failed (${res.status})`;
+        alert(`Checkout error: ${details}`);
       }
-    } catch {
-      alert("Something went wrong. Please try again.");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Unknown network error";
+      alert(`Checkout error: ${message}`);
     }
     setLoading(null);
   };

@@ -9,9 +9,10 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 export async function POST(req: NextRequest) {
   try {
     const { plan, billing, email, userId } = await req.json();
-    const priceId = getPriceId(plan, billing || "monthly");
+    const selectedBilling = billing || "monthly";
+    const priceId = getPriceId(plan, selectedBilling);
     if (!priceId) {
-      return NextResponse.json({ error: "Invalid plan" }, { status: 400 });
+      return NextResponse.json({ error: "Invalid plan or billing interval" }, { status: 400 });
     }
 
     const origin = req.headers.get("origin") || SITE_URL;
@@ -21,7 +22,7 @@ export async function POST(req: NextRequest) {
       line_items: [{ price: priceId, quantity: 1 }],
       success_url: `${origin}/upgrade/success?plan=${plan}&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/pricing`,
-      metadata: { userId: userId || "", plan },
+      metadata: { userId: userId || "", plan, billing: selectedBilling },
     };
 
     if (email) {
@@ -32,6 +33,27 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ url: session.url });
   } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    const message = err?.message || "Checkout session creation failed";
+    console.error("Stripe checkout error:", {
+      message,
+      type: err?.type,
+      code: err?.code,
+      decline_code: err?.decline_code,
+      param: err?.param,
+      statusCode: err?.statusCode,
+      requestId: err?.requestId,
+      rawType: err?.rawType,
+    });
+
+    return NextResponse.json(
+      {
+        error: message,
+        type: err?.type || null,
+        code: err?.code || null,
+        param: err?.param || null,
+        requestId: err?.requestId || null,
+      },
+      { status: err?.statusCode || 500 }
+    );
   }
 }
